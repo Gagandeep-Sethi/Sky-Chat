@@ -23,7 +23,8 @@ exports.login=async(req,res)=>{
         if(!passwordCheck){
             throw new Error ("Password wrong")
         }
-        res.status(200).json({email,username:user.username})
+        const token=createToken(user._id)
+        res.status(200).json({email,username:user.username,token})
         
     } catch (error) {
         if(error instanceof Error){
@@ -60,7 +61,8 @@ exports.signup=async(req,res)=>{
             email:email.toLowerCase(),
             password:hashPassword
         })
-        res.status(200).json({user})
+        const token=createToken(user._id)
+        res.status(200).json({email,username:user.username,token})
     } catch (error) {
         if(error instanceof Error){
             res.status(400).json({mesage:error.message})
