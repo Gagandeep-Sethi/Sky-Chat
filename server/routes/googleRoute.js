@@ -6,18 +6,14 @@ const passport = require('passport');
 // Google login route
 router.get('/login', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-// Google signup
-router.get('/signup',
-  passport.authenticate('google',             //google here specifies that this passport will redirect it to the google auth page
-  {scope:['profile','email']})                                //this scope indicate what to retrieve 
-//   (req, res) => {
-//     // Handle successful Google authentication
-//     res.redirect('/'); // Redirect to home page or dashboard
-//   }
-);
 
-router.get('/callback',passport.authenticate('google'),(req,res)=>{
-console.log('you reached callback route')
+
+router.get('/callback',passport.authenticate('google', { failureRedirect: '/auth/google/login',session: false }),(req,res)=>{
+
+  const {username,email,token}=req.user.user
+
+  res.status(200).json({email,username,token})
+  // res.redirect(`http://localhost:3000/login?token=${req.user}`);
 })
 
 module.exports = router;
