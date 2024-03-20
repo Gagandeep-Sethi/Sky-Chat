@@ -72,3 +72,17 @@ exports.signup=async(req,res)=>{
         
     }
 }
+
+exports.search=async(req,res)=>{
+    const keyword=req.query.search?{
+        $or:[
+            {
+              username:{$regex:req.query.search ,$option:'i'}
+            },
+            {
+              email:{$regex:req.query.search ,$option:'i'}
+            }
+        ]
+    }:{}
+    const users=await User.find(keyword).find({_id:{$ne:re.user._id}})
+}
