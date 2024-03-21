@@ -72,7 +72,7 @@ exports.signup=async(req,res)=>{
         
     }
 }
-
+//searching all user execpt the requestion user
 exports.search=async(req,res)=>{
     const keyword=req.query.search?{
         $or:[
@@ -84,5 +84,5 @@ exports.search=async(req,res)=>{
             }
         ]
     }:{}
-    const users=await User.find(keyword).find({_id:{$ne:re.user._id}})
+    const users=await User.find(keyword).find({_id:{$ne:req.user._id}})
 }

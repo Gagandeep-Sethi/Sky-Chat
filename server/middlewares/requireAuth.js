@@ -6,8 +6,8 @@ const requireAuth= async(req,res,next)=>{
    if(!authorization){
     res.status(401).json({error:"Authorization token required"})
    }
-   //authorization =>     Bearer gshjdfgjhfgsjfhfigf.dsdyweyhdd.jadsagdajshd    so we split the first part to get token exactly
-   const token =authorization.split(' ')[1]
+   //authorization =>     Bearer gshjdfgjhfgsjfhfigf.dsdyweyhdd.jadsagdajshd    
+   const token =authorization.split(' ')[1]     //so we split the first part to get token exactly
 
    try {
     const {_id}=jwt.verify(token,process.env.JWT_SECRET)     //we verify and extract _id from the token
@@ -22,3 +22,18 @@ const requireAuth= async(req,res,next)=>{
 
 }
 module.exports=requireAuth
+
+// to send this header
+//const user= useSeelector(...........)  user present in store
+// const fetchData=async()=>{
+//    const data=await fetch('/api/workout',
+//    {
+//       headers:{
+//          'Authorization': `Bearer ${user.token}`      //assigning auth header with req       
+//       }
+//    })
+// if(data.ok){
+//    dispatchEvent(.........)
+// }
+// }
+// ..................
