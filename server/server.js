@@ -1,5 +1,5 @@
 const express = require("express");
-const userRouter = require("./routes/userRoute");
+const authRouter = require("./routes/authRoute");
 const messageRouter = require("./routes/messageRoute");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
@@ -20,7 +20,7 @@ db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
   console.log("Connected to MongoDB");
 });
-app.use("/api", userRouter);
+app.use("/api", authRouter);
 app.use("/auth/google", googleRouter);
 app.use("/api/message", messageRouter);
 
