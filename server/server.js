@@ -1,13 +1,15 @@
 const express = require("express");
 const userRouter = require("./routes/userRoute");
+const messageRouter = require("./routes/messageRoute");
 const mongoose = require("mongoose");
-
+const cookieParser = require("cookie-parser");
 const googleRouter = require("./routes/googleRoute");
 require("dotenv").config();
 const app = express();
-
+//require for json conversion of content in body
 app.use(express.json());
-
+//required for cookie management
+app.use(cookieParser());
 const passport = require("passport");
 require("./config/passport");
 mongoose.connect(process.env.MONGODB_URI);
@@ -20,6 +22,7 @@ db.once("open", () => {
 });
 app.use("/api", userRouter);
 app.use("/auth/google", googleRouter);
+app.use("/api/message", messageRouter);
 
 app.listen(process.env.PORT, () =>
   console.log("server listening at port 5000")
