@@ -1,4 +1,4 @@
-const ChatMessage = require("../models/ChatMessage");
+const Chat = require("../models/Chat");
 const Message = require("../models/Message");
 
 exports.sendMessage = async (req, res) => {
@@ -11,17 +11,17 @@ exports.sendMessage = async (req, res) => {
 
     if (chatId) {
       // Group chat
-      chat = await ChatMessage.findById(chatId);
+      chat = await Chat.findById(chatId);
       if (!chat) {
         return res.status(404).json({ message: "Chat not found" });
       }
     } else if (receiverId) {
       // One-on-one chat
-      chat = await ChatMessage.findOne({
+      chat = await Chat.findOne({
         users: { $all: [senderId, receiverId] },
       });
       if (!chat) {
-        chat = await ChatMessage.create({
+        chat = await Chat.create({
           users: [senderId, receiverId],
         });
       }
@@ -57,10 +57,10 @@ exports.getChat = async (req, res) => {
 
     if (chatId) {
       // Group chat
-      chat = await ChatMessage.findById(chatId);
+      chat = await Chat.findById(chatId);
     } else if (userToChatWithId) {
       // One-on-one chat
-      chat = await ChatMessage.findOne({
+      chat = await Chat.findOne({
         isGroupChat: false,
         users: { $all: [senderId, userToChatWithId] },
       });
@@ -84,19 +84,3 @@ exports.getChat = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-// exports.getMessage = async (req, res) => {
-//   try {
-//     const { id: userToChatWithId } = req.params;
-//     const senderId = req.user._id;
-
-//     const chat = await ChatMessage.findOne({
-//       users: { $all: [userToChatWithId, senderId] },
-//     }).populate("chat");
-//     if (!chat) return res.status(200).json([]);
-
-//     return res.status(200).json(chat.chat);
-//   } catch (error) {
-//     console.log("error in getting message", error);
-//     res.status(500).json({ message: "internal server error" });
-//   }
-// };
