@@ -71,10 +71,12 @@ exports.signup = async (req, res) => {
         throw new Error("Email not verified on time please re-register");
       }
     }
+    //if username is not unique throw an error
     const name = await User.findOne({ username });
     if (name) {
       throw new Error("This username already exists");
     }
+    //encrpt. password usinf bcrypt
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
     const user = await User.create({
@@ -84,6 +86,13 @@ exports.signup = async (req, res) => {
       verifyToken: generateVerificationToken(),
       verifyTokenExpiry: generateTokenExpiry(),
     });
+    //sending verification link to email
+    sendEmail(
+      user.email,
+      "Email Verification",
+      `Click the following link to verify your email: ${process.env.DOMAIN}/verify?token=${user.verifyToken}`,
+      `<p>Click the following link to verify your email: <a href="${process.env.DOMAIN}/api/users/verify?token=${user.verifyToken}&action=verify-email">Verify Email</a></p>`
+    );
 
     res.status(200).json({
       email,
