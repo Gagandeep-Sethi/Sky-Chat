@@ -186,3 +186,56 @@ exports.forgotPassword = async (req, res) => {
     }
   }
 };
+exports.verifyEmail = async (req, res) => {
+  const token = req.query.token;
+  const action = req.query.action;
+
+  try {
+    //if verification is for signup
+    if (action === "verify-email") {
+      // find user using verification token
+      const user = await User.findOne({ verifyToken: token });
+
+      if (!user || user.verifyTokenExpiry < Date.now()) {
+        // Token is invalid or expired
+        return res.status(400).json({
+          message: "Invalid or expired token please try to signup again",
+        });
+      }
+
+      // Mark user as verified
+      user.verified = true;
+      user.verifyToken = null;
+      user.verifyTokenExpiry = null;
+      await user.save();
+
+      // Redirect to a verification success page
+      return res.redirect(`${process.env.DOMAIN}/user/verified`);
+    }
+
+    //if the verification is for forgot password
+    if (action === "reset-password") {
+      // find user using verification token
+      const user = await User.findOne({ forgotPasswordToken: token });
+
+      if (!user || user.forgotPasswordTokenExpiry < Date.now()) {
+        // Token is invalid or expired
+        return res.status(400).json({
+          message:
+            "Invalid or expired token please try to reset password again",
+        });
+      }
+
+      return res.redirect(
+        `${process.env.DOMAIN}/user/resetPassword?email=${encodeURIComponent(
+          user.email
+        )}&token=${encodeURIComponent(token)}`
+      );
+    }
+    return res
+      .status(400)
+      .json({ message: "Something went wrong Please try again !!" });
+  } catch (error) {
+    return res.status(400).json({ message: "Error verifying user" });
+  }
+};
