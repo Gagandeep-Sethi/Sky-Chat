@@ -97,7 +97,6 @@ exports.signup = async (req, res) => {
     }
   }
 };
-//searching all user execpt the requestion user
 
 exports.logout = (req, res) => {
   try {
@@ -106,5 +105,41 @@ exports.logout = (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(400).json({ message: "Internal server error" });
+  }
+};
+
+exports.changePassword = async (req, res) => {
+  try {
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+    const userId = req.user._id;
+    if (!oldPassword || !newPassword || !confirmPassword) {
+      throw new Error("All fields must be filed");
+    }
+    if (!validator.isStrongPassword(newPassword)) {
+      throw new Error("password not strong");
+    }
+    if (newPassword !== confirmPassword) {
+      throw new Error("Confirm password doesn't match");
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "User not found please try again" });
+    }
+    const match = await bcrypt.compare(oldPassword, user.password);
+    if (!match) {
+      return res.status(400).json({ message: "Old password doesn't match" });
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(newPassword, salt);
+    user.password = hashPassword;
+    await user.save();
+    return res.status(200).json({ message: "Password updated please login" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Something went wrong" });
   }
 };
