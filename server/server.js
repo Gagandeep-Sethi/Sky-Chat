@@ -6,13 +6,16 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const googleRouter = require("./routes/googleRoute");
 const userRouter = require("./routes/userRoute");
-
+const fileUpload = require("express-fileupload");
 require("dotenv").config();
 const app = express();
 //require for json conversion of content in body
 app.use(express.json());
 //required for cookie management
 app.use(cookieParser());
+
+//required to handle file upload and remove the need to convert image to buffer manually
+app.use(fileUpload());
 const passport = require("passport");
 require("./config/passport");
 mongoose.connect(process.env.MONGODB_URI);
