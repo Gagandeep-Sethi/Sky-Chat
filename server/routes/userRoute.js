@@ -1,15 +1,8 @@
 const express = require("express");
-const {
-  signup,
-  login,
-  search,
-  logout,
-} = require("../controllers/userController");
-const requireAuth = require("../middlewares/requireAuth");
+const { updateProfile } = require("../controllers/userController");
 const router = express.Router();
+const requireAuth = require("../middlewares/requireAuth");
 
-router.post("/user/login", login);
-router.post("/user/signup", signup);
-router.get("/user?search=gagan", requireAuth, search);
-router.get("/user/logout", logout);
+router.post("/update", requireAuth, updateProfile);
+
 module.exports = router;
