@@ -1,3 +1,4 @@
+const { sendEmail } = require("../helpers/email");
 const {
   generateJwtToken,
   generateTokenExpiry,
@@ -139,7 +140,49 @@ exports.changePassword = async (req, res) => {
     await user.save();
     return res.status(200).json({ message: "Password updated please login" });
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    console.log(error, "sigup error");
+    if (error instanceof Error) {
+      res.status(400).json({ mesage: error.message });
+    } else {
+      res.status(500).json({ message: "server error" });
+    }
+  }
+};
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw new Error("No user found with this email !!");
+    }
+    if (!user.verified) {
+      throw new Error("User not verified !!");
+    }
+    // if (user.googleId) {
+    //   throw new Error(
+    //     "You have signed in using google please login using your google account !!"
+    //   );
+    // }
+    user.forgotPasswordToken = generateVerificationToken();
+    user.forgotPasswordTokenExpiry = generateTokenExpiry();
+    await user.save();
+    sendEmail(
+      user.email,
+      "Reset Password",
+      `Click the following link to reset your password: ${process.env.DOMAIN}/verify?token=${user.forgotPasswordToken}`,
+      `<p>Click the following link to verify your email: <a href="${process.env.DOMAIN}/api/users/verify?token=${user.forgotPasswordToken}&action=reset-password">Verify Email</a></p>`
+    );
+
+    return NextResponse.json(
+      { message: "Reset password link sent to your email please checkout" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.log(error, "sigup error");
+    if (error instanceof Error) {
+      res.status(400).json({ mesage: error.message });
+    } else {
+      res.status(500).json({ message: "server error" });
+    }
   }
 };
