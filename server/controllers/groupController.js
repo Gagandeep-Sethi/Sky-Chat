@@ -45,21 +45,40 @@ exports.createGroupChat = async (req, res) => {
 exports.updateGroup = async (req, res) => {
   try {
     const { chatId, chatName } = req.body;
-    let group;
-    if (!chatId) {
-      return res.status(400).json({ message: "chat not found" });
-    } else group = await Chat.findById(chatId);
 
+    // Find the group by ID
+    let group = await Chat.findById(chatId);
+
+    // Check if group exists
     if (!group) {
       return res.status(400).json({
-        message: " Group doesnot found",
+        message: "Group does not exist",
       });
     }
-    if (chatName) group.chatName = chatName;
+
+    // Check if the user is an admin
+    const isAdmin = group.groupAdmin.includes(req.user._id);
+    if (!isAdmin) {
+      return res.status(403).json({
+        message: "User trying to update group settings is not an admin",
+      });
+    }
+
+    // Update the chatName if provided
+    if (chatName) {
+      group.chatName = chatName;
+    }
+
+    // Save the updated group document
     await group.save();
-    res.status(200).json(group);
+    return res.status(200).json({
+      message: "Group updated successfully",
+      group,
+    });
   } catch (error) {
-    console.error("Error updating group chat", error);
-    return res.status(500).json({ message: "Internal server error" });
+    console.log(error);
+    return res.status(500).json({
+      message: "Error updating group",
+    });
   }
 };
