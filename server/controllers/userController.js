@@ -58,8 +58,10 @@ exports.addFriend = async (req, res) => {
       throw new Error("user not found");
     }
     const { id: friendId } = req.params;
-    if (!friendId) {
-      throw new Error("User tou are trying to add not found");
+    const friend = await User.findById(friendId);
+
+    if (!friend) {
+      throw new Error("User you are trying to add not found");
     }
 
     let friendList = await FriendList({ userId: requestingUserId });
@@ -109,7 +111,83 @@ exports.removeFriend = async (req, res) => {
     friendList.friends.splice(friendIndex, 1);
     await friendList.save();
 
-    return res.status(200).json({ message: "Friend removed successfully" });
+    return res
+      .status(200)
+      .json({ message: "Friend removed from friend list successfully" });
+  } catch (error) {
+    console.log(error, "remove friend error");
+    if (error instanceof Error) {
+      res.status(400).json({ mesage: error.message });
+    } else {
+      res.status(500).json({ message: "server error" });
+    }
+  }
+};
+
+exports.blockFriend = async (req, res) => {
+  try {
+    const requestingUserId = req.user._id;
+    const user = await User.findById(requestingUserId);
+
+    if (!user) {
+      throw new Error("user not found");
+    }
+    const { id: friendId } = req.params;
+    const friend = await User.findById(friendId);
+
+    if (!friend) {
+      throw new Error("User you are trying to block not found");
+    }
+
+    let friendList = await FriendList({ userId: requestingUserId });
+    if (friendList) {
+      friendList.blocked.push(friendId);
+    } else {
+      friendList = await FriendList.create({
+        userId: requestingUserId,
+      });
+      friendList.blocked.push(friendId);
+    }
+    await friendList.save();
+    res.status(200).json(friendList);
+  } catch (error) {
+    console.log(error, "blocking  friend error");
+    if (error instanceof Error) {
+      res.status(400).json({ mesage: error.message });
+    } else {
+      res.status(500).json({ message: "server error" });
+    }
+  }
+};
+
+exports.removeBlockedFriend = async (req, res) => {
+  try {
+    const requestingUserId = req.user._id;
+    const user = await User.findById(requestingUserId);
+    const { id: friendId } = req.params;
+
+    if (!user) {
+      throw new Error("user not found");
+    }
+
+    const friendList = await FriendList.findOne({ userId: requestingUserId });
+
+    if (!friendList) {
+      throw new Error("Friend list not found ");
+    }
+
+    const friendIndex = friendList.blocked.indexOf(friendId);
+
+    if (friendIndex === -1) {
+      throw new Error("Friend not found in the list");
+    }
+
+    friendList.blocked.splice(friendIndex, 1);
+    await friendList.save();
+
+    return res
+      .status(200)
+      .json({ message: "Friend removed from blocked list successfully" });
   } catch (error) {
     console.log(error, "remove friend error");
     if (error instanceof Error) {
