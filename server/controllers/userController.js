@@ -28,6 +28,7 @@ exports.updateProfile = async (req, res) => {
       throw new Error("user not found");
     }
     const file = req.files.profilePic;
+
     if (file) {
       const filepath = await uploadImagesToCloudinary(file, "sky-chat/profile");
       if (user.profilePic) {
