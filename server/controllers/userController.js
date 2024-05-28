@@ -2,7 +2,9 @@ const {
   uploadImagesToCloudinary,
   deleteImage,
 } = require("../helpers/cloudinary");
+const Chat = require("../models/Chat");
 const FriendList = require("../models/FriendList");
+const Message = require("../models/Message");
 const User = require("../models/User");
 
 exports.search = async (req, res) => {
@@ -201,18 +203,38 @@ exports.removeBlockedFriend = async (req, res) => {
 exports.getFriendList = async (req, res) => {
   try {
     const requestingUserId = req.user._id;
-    const friendList = await friendList.findOne({ userId: requestingUserId });
+    const friendList = await FriendList.findOne({ userId: requestingUserId });
     const user = await User.findById(requestingUserId);
 
     if (!user) {
-      throw new Error("requesting user not found");
+      throw new Error("Requesting user not found");
     }
 
     if (!friendList) {
-      throw new Error("No friendlist found");
-    } else {
-      res.status(200).json(friendList.friends);
+      throw new Error("No friend list found");
     }
+
+    // Fetch latest messages for each friend
+    const friendsWithLatestMessages = await Promise.all(
+      friendList.friends.map(async (friendId) => {
+        const friend = await User.findById(friendId, "username");
+        const chat = await Chat.findOne({
+          users: { $all: [requestingUserId, friendId] },
+        });
+
+        let latestMessage = null;
+        if (chat) {
+          latestMessage = await Message.findById(chat.latestMessage);
+        }
+
+        return {
+          username: friend ? friend.username : null,
+          latestMessage: latestMessage ? latestMessage.content : "",
+        };
+      })
+    );
+
+    res.status(200).json(friendsWithLatestMessages);
   } catch (error) {
     console.log(error, "get friendlist error");
     if (error instanceof Error) {
@@ -232,11 +254,11 @@ exports.getBlockedList = async (req, res) => {
       throw new Error("requesting user not found");
     }
 
-    const friendList = await friendList.findOne({ userId: requestingUserId });
-    if (!friendList) {
+    const blockedList = await FriendList.findOne({ userId: requestingUserId });
+    if (!blockedList) {
       throw new Error("No friendlist found");
     } else {
-      res.status(200).json(friendList.blocked);
+      res.status(200).json(blockedList.blocked);
     }
   } catch (error) {
     console.log(error, "get blockedlist error");
