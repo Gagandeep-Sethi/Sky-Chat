@@ -64,13 +64,14 @@ exports.addFriend = async (req, res) => {
       throw new Error("User you are trying to add not found");
     }
 
-    let friendList = await FriendList({ userId: requestingUserId });
+    let friendList = await FriendList.findOne({ userId: requestingUserId });
     if (friendList) {
-      friendList.friends.push(friendId);
+      if (friendList.friends.includes(friendId)) {
+        throw new Error("User already in your friendlist");
+      } else friendList.friends.push(friendId);
     } else {
       friendList = await FriendList.create({
         userId: requestingUserId,
-        friends: [],
       });
       friendList.friends.push(friendId);
     }
@@ -111,9 +112,7 @@ exports.removeFriend = async (req, res) => {
     friendList.friends.splice(friendIndex, 1);
     await friendList.save();
 
-    return res
-      .status(200)
-      .json({ message: "Friend removed from friend list successfully" });
+    return res.status(200).json(friendList);
   } catch (error) {
     console.log(error, "remove friend error");
     if (error instanceof Error) {
@@ -139,8 +138,11 @@ exports.blockFriend = async (req, res) => {
       throw new Error("User you are trying to block not found");
     }
 
-    let friendList = await FriendList({ userId: requestingUserId });
+    let friendList = await FriendList.findOne({ userId: requestingUserId });
     if (friendList) {
+      if (friendList.blocked.includes(friendId)) {
+        throw new Error("User already in your blockedlist");
+      }
       friendList.blocked.push(friendId);
     } else {
       friendList = await FriendList.create({
@@ -185,11 +187,59 @@ exports.removeBlockedFriend = async (req, res) => {
     friendList.blocked.splice(friendIndex, 1);
     await friendList.save();
 
-    return res
-      .status(200)
-      .json({ message: "Friend removed from blocked list successfully" });
+    return res.status(200).json(friendList);
   } catch (error) {
     console.log(error, "remove friend error");
+    if (error instanceof Error) {
+      res.status(400).json({ mesage: error.message });
+    } else {
+      res.status(500).json({ message: "server error" });
+    }
+  }
+};
+
+exports.getFriendList = async (req, res) => {
+  try {
+    const requestingUserId = req.user._id;
+    const friendList = await friendList.findOne({ userId: requestingUserId });
+    const user = await User.findById(requestingUserId);
+
+    if (!user) {
+      throw new Error("requesting user not found");
+    }
+
+    if (!friendList) {
+      throw new Error("No friendlist found");
+    } else {
+      res.status(200).json(friendList.friends);
+    }
+  } catch (error) {
+    console.log(error, "get friendlist error");
+    if (error instanceof Error) {
+      res.status(400).json({ mesage: error.message });
+    } else {
+      res.status(500).json({ message: "server error" });
+    }
+  }
+};
+
+exports.getBlockedList = async (req, res) => {
+  try {
+    const requestingUserId = req.user._id;
+    const user = await User.findById(requestingUserId);
+
+    if (!user) {
+      throw new Error("requesting user not found");
+    }
+
+    const friendList = await friendList.findOne({ userId: requestingUserId });
+    if (!friendList) {
+      throw new Error("No friendlist found");
+    } else {
+      res.status(200).json(friendList.blocked);
+    }
+  } catch (error) {
+    console.log(error, "get blockedlist error");
     if (error instanceof Error) {
       res.status(400).json({ mesage: error.message });
     } else {
