@@ -217,7 +217,10 @@ exports.getFriendList = async (req, res) => {
     // Fetch latest messages for each friend
     const friendsWithLatestMessages = await Promise.all(
       friendList.friends.map(async (friendId) => {
-        const friend = await User.findById(friendId, "username");
+        const friend = await User.findById(friendId, {
+          username: 1,
+          profilePic: 1,
+        });
         const chat = await Chat.findOne({
           users: { $all: [requestingUserId, friendId] },
         });
@@ -226,8 +229,10 @@ exports.getFriendList = async (req, res) => {
         if (chat) {
           latestMessage = await Message.findById(chat.latestMessage);
         }
+        console.log(friend.profilePic, "profilePic");
 
         return {
+          profilePic: friend ? friend.profilePic : "",
           username: friend ? friend.username : null,
           latestMessage: latestMessage ? latestMessage.content : "",
         };
