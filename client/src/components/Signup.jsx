@@ -20,7 +20,7 @@ const Signup = () => {
       <div className="w-full md:w-1/2  h-[60%] md:h-full    bg-customSkin   flex flex-col justify-center items-center">
         <h1 className="font-mono text-3xl mb-10 text-customCyan">SignUp</h1>
         <div>
-          <form className="space-y-8 w-full h-full flex flex-col items-center  ">
+          <form className="md:space-y-8 space-y-6 w-full h-full flex flex-col items-center  ">
             <div class="relative">
               <input
                 required
@@ -101,10 +101,16 @@ const Signup = () => {
                 <span className="text-red-600 ">*</span>
               </label>
             </div>
-            <button className="btn btn-md  text-white hover:bg-cyan-700 bg-customCyan font-medium border-none rounded-3xl px-6 ">
+            <button className="btn btn-md   text-white hover:bg-cyan-700 bg-customCyan font-medium border-none rounded-3xl px-6 ">
               Signup
             </button>
           </form>
+          <p className="text-center text-sm  text-gray-400 -mt-2">
+            Already have account ?{" "}
+            <span className=" cursor-pointer text-blue-800 hover:underline">
+              {/* <Link href="/user/login">SignIn</Link> */} Login
+            </span>
+          </p>
         </div>
         <div></div>
       </div>
