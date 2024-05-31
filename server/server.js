@@ -7,6 +7,8 @@ const cookieParser = require("cookie-parser");
 const googleRouter = require("./routes/googleRoute");
 const userRouter = require("./routes/userRoute");
 const fileUpload = require("express-fileupload");
+const cors = require("cors");
+
 require("dotenv").config();
 const app = express();
 //require for json conversion of content in body
@@ -16,6 +18,19 @@ app.use(cookieParser());
 
 //required to handle file upload and remove the need to convert image to buffer manually
 app.use(fileUpload());
+const whitelist = ["http://localhost:3000"];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true, //helps to set credentials cookie mainly
+};
+app.use(cors(corsOptions));
+
 const passport = require("passport");
 require("./config/passport");
 mongoose.connect(process.env.MONGODB_URI);
