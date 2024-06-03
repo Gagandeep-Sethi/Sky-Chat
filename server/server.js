@@ -11,13 +11,15 @@ const cors = require("cors");
 
 require("dotenv").config();
 const app = express();
-//require for json conversion of content in body
+
+// Require for JSON conversion of content in body
 app.use(express.json());
-//required for cookie management
+// Required for cookie management
 app.use(cookieParser());
 
-//required to handle file upload and remove the need to convert image to buffer manually
+// Required to handle file upload and remove the need to convert image to buffer manually
 app.use(fileUpload());
+
 const whitelist = ["http://localhost:3000"];
 const corsOptions = {
   origin: function (origin, callback) {
@@ -27,9 +29,10 @@ const corsOptions = {
       callback(new Error("Not allowed by CORS"));
     }
   },
-  credentials: true, //helps to set credentials cookie mainly
+  credentials: true, // Helps to set credentials cookie mainly
 };
-app.use(cors(corsOptions));
+
+app.use(cors(corsOptions)); // Enable CORS with options
 
 const passport = require("passport");
 require("./config/passport");
@@ -41,12 +44,27 @@ db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
   console.log("Connected to MongoDB");
 });
+
 app.use("/api/auth", authRouter);
 app.use("/auth/google", googleRouter);
 app.use("/api/message", messageRouter);
 app.use("/api/group", groupRouter);
 app.use("/api/user", userRouter);
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET,HEAD,OPTIONS,POST,PUT,DELETE"
+  );
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  next();
+});
+
 app.listen(process.env.PORT, () =>
-  console.log("server listening at port 5000")
+  console.log(`server listening at port ${process.env.PORT}`)
 );
