@@ -11,16 +11,13 @@ module.exports = {
         customCyan: "#17a2b8",
         customGreen: "#cad2c5",
         customSkin: "#fffcf2",
+        chatBubble1: "#3b82f6",
+        chatMsg1: "#fffcf2",
       },
     },
-    screens: {
-      sm: "640px", // default Tailwind CSS sm breakpoint
-      md: "768px", // default Tailwind CSS md breakpoint
-      lg: "1024px", // default Tailwind CSS lg breakpoint
-      xl: "1280px", // default Tailwind CSS xl breakpoint
-      "2xl": "1536px", // default Tailwind CSS 2xl breakpoint
-      // You can customize or add new breakpoints here
-    },
   },
-  plugins: [require("daisyui")],
+  daisyui: {
+    themes: false,
+  },
+  plugins: [require("daisyui"), require("tailwind-scrollbar")],
 };
