@@ -4,7 +4,11 @@ const uiSlice = createSlice({
   name: "ui",
   initialState: {
     activeComponent: "sidebar", // 'sidebar', 'chat', 'profile'
-    selectedChat: null,
+    selectedChat: {
+      username: "",
+      profilePic: "",
+      FriendId: "",
+    },
   },
   reducers: {
     setActiveComponent: (state, action) => {
