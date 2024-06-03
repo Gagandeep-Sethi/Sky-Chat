@@ -1,13 +1,13 @@
 import { useState } from "react";
-//import { useDispatch } from "react-redux"
-//import { addUser } from "../store/userSlice"
+import { useDispatch } from "react-redux";
 import { Fetch_Uri } from "../constants";
+import { addUser } from "../../redux/userSlice";
 
 export const useLogin = (formValue) => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
 
-  //const dispatch=useDispatch()
+  const dispatch = useDispatch();
   const login = async (formValue) => {
     const { email, password } = formValue;
 
@@ -27,9 +27,7 @@ export const useLogin = (formValue) => {
       setError(json.mesage);
     }
     if (response.ok) {
-      console.log(json, "json");
-      localStorage.setItem("user", JSON.stringify(json)); //to store item in local storage of browser by name user
-      //dispatch(addUser(json))
+      dispatch(addUser(json));
       setIsLoading(false);
     }
   };
