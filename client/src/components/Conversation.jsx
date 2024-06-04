@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Fetch_Uri } from "../utils/constants";
 import { FaArrowLeft } from "react-icons/fa6";
 import Chatting from "./Chatting";
 import SendMessage from "./SendMessage";
+import { setActiveComponent, setProfile } from "../redux/uiSlice";
 
 const Conversation = () => {
   const { selectedChat } = useSelector((state) => state.ui);
   const [chat, setChat] = useState([]);
-  console.log(selectedChat, "chat");
+  const dispatch = useDispatch();
+  function handleProfileClick() {
+    dispatch(setProfile("friend"));
+    dispatch(setActiveComponent("profile"));
+  }
   useEffect(() => {
     async function getData() {
       const response = await fetch(
@@ -25,9 +30,8 @@ const Conversation = () => {
     }
     if (selectedChat) getData();
   }, [selectedChat]);
-  console.log(chat, "chat");
   return (
-    <div className="relative w-full h-full items-center scrollbar-none overflow-y-auto overflow-x-hidden">
+    <div className="relative w-full h-full items-center scrollbar-none overflow-y-auto overflow-x-hidden md:border-r border-gray-400">
       <div className=" flex gap-6 md:justify-center items-center w-full md:py-3 pt-2.5 pb-1.5 sticky bg-neutral-900 top-0  z-10 ">
         <FaArrowLeft className="md:hidden w-6 h-6 ml-6" />
 
@@ -39,14 +43,16 @@ const Conversation = () => {
             />
           </div>
         </div>
-        <p className="text-lg ">{selectedChat?.username}</p>
+        <p onClick={handleProfileClick} className="text-lg cursor-pointer">
+          {selectedChat?.username}
+        </p>
       </div>
 
       <div className="w-full flex-grow">
         <Chatting chat={chat} friendPic={selectedChat?.profilePic} />
       </div>
       <div className="   sticky bottom-1 w-full  ">
-        <SendMessage />
+        <SendMessage id={selectedChat.friendId} />
       </div>
     </div>
   );

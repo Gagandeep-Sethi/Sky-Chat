@@ -4,6 +4,7 @@ const uiSlice = createSlice({
   name: "ui",
   initialState: {
     activeComponent: "sidebar", // 'sidebar', 'chat', 'profile'
+    profile: "", //own or friend
     selectedChat: {
       username: "",
       profilePic: "",
@@ -17,9 +18,13 @@ const uiSlice = createSlice({
     setSelectedChat: (state, action) => {
       state.selectedChat = action.payload;
     },
+    setProfile: (state, action) => {
+      state.profile = action.payload;
+    },
   },
 });
 
-export const { setActiveComponent, setSelectedChat } = uiSlice.actions;
+export const { setActiveComponent, setSelectedChat, setProfile } =
+  uiSlice.actions;
 
 export default uiSlice.reducer;
