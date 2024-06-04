@@ -1,11 +1,10 @@
 import "./App.css";
-import Signup from "./components/Signup";
-
+import { Outlet } from "react-router-dom";
 function App() {
   return (
-    <div className=" bg-[url('./images/background.jpg')] min-w-fit h-screen flex justify-center items-center">
-      <div className="w-[80%] h-[80%] ">
-        <Signup />
+    <div className="scroll-smooth">
+      <div className="text-white">
+        <Outlet />
       </div>
     </div>
   );
