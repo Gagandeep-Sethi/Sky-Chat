@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setActiveComponent } from "../redux/uiSlice";
 import { useAddFriend } from "../utils/hooks/useAddFriend";
 import { useRemoveFriend } from "../utils/hooks/useRemoveFriend";
+import { useBlockFriend } from "../utils/hooks/useBlockFriend";
 
 const FriendProfile = () => {
   const [profileDetails, setProfileDetails] = useState({
@@ -14,6 +15,7 @@ const FriendProfile = () => {
   const dispatch = useDispatch();
   const { addFriend, isLoadingAdd } = useAddFriend();
   const { remove, isLoadingRemove } = useRemoveFriend();
+  const { block, isLoadingBlock } = useBlockFriend();
 
   useEffect(() => {
     if (chat?.profile === "friend") {
@@ -32,6 +34,9 @@ const FriendProfile = () => {
   };
   const handleRemoveFriend = async () => {
     await remove(chat?.selectedChat?.FriendId);
+  };
+  const handleBlockFriend = async () => {
+    await block(chat?.selectedChat?.FriendId);
   };
 
   return (
@@ -74,7 +79,11 @@ const FriendProfile = () => {
             </button>
           </div>
           <div className="flex justify-center ">
-            <button className="btn  bg-blue-600 text-white hover:bg-blue-500">
+            <button
+              disabled={isLoadingBlock}
+              onClick={handleBlockFriend}
+              className="btn  bg-blue-600 text-white hover:bg-blue-500"
+            >
               Block User
             </button>
           </div>
