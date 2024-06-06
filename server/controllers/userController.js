@@ -30,16 +30,23 @@ exports.updateProfile = async (req, res) => {
     if (!user) {
       throw new Error("user not found");
     }
-    const file = req.files.profilePic;
+    const file = req.files?.profilePic;
+    const { username } = req.body;
+    console.log(username, "username");
+    console.log(file, "file");
 
     if (file) {
       const filepath = await uploadImagesToCloudinary(file, "sky-chat/profile");
       if (user.profilePic) {
-        deleteImage(user.profilePic);
+        await deleteImage(user.profilePic);
       }
       user.profilePic = filepath;
     }
+    if (username) {
+      user.username = username;
+    }
     await user.save();
+    console.log(user, "user");
     res.status(200).json(user);
   } catch (error) {
     console.log(error, "update profile error");
@@ -229,12 +236,13 @@ exports.getFriendList = async (req, res) => {
         if (chat) {
           latestMessage = await Message.findById(chat.latestMessage);
         }
-        console.log(friend.profilePic, "profilePic");
 
         return {
+          friendId,
           profilePic: friend ? friend.profilePic : "",
           username: friend ? friend.username : null,
           latestMessage: latestMessage ? latestMessage.content : "",
+          chatTime: latestMessage ? latestMessage.createdAt : null,
         };
       })
     );
@@ -274,3 +282,9 @@ exports.getBlockedList = async (req, res) => {
     }
   }
 };
+{
+  /* <div class="relative">
+    <input required id="username" class="peer rounded-lg border border-green-400 px-2 py-1 placeholder-transparent placeholder-shown:border-gray-600 focus:border-green-400 focus:outline-none " type="text" placeholder="enter your name" />
+    <label for="username" class="absolute left-2 top-1 cursor-text font-light text-gray-500 transition-all duration-200 peer-valid:-top-3 peer-valid:bg-white peer-valid:text-sm peer-valid:text-green-400 peer-focus:-top-3 peer-focus:bg-white peer-focus:text-sm peer-focus:text-green-400">Enter your name</label>
+  </div> */
+}
