@@ -4,16 +4,17 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setFriends } from "../../redux/userRelationsSlice";
 
-export const useAddFriend = () => {
-  const [isLoadingAdd, setIsLoading] = useState(null);
+export const useRemoveFriend = () => {
+  const [isLoadingRemove, setIsLoading] = useState(null);
   const dispatch = useDispatch();
-  const addFriend = async (id) => {
+
+  const remove = async (id) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${Fetch_Uri}/api/user/addFriend/${id}`, {
+      const response = await fetch(`${Fetch_Uri}/api/user/removeFriend/${id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(),
+        //body: formData,
         credentials: "include", //this will let it set cookie
       });
       const json = await response.json();
@@ -30,5 +31,5 @@ export const useAddFriend = () => {
       }
     } catch (error) {}
   };
-  return { addFriend, isLoadingAdd };
+  return { remove, isLoadingRemove };
 };

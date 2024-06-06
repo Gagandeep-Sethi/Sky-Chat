@@ -3,6 +3,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { setActiveComponent } from "../redux/uiSlice";
 import { useAddFriend } from "../utils/hooks/useAddFriend";
+import { useRemoveFriend } from "../utils/hooks/useRemoveFriend";
 
 const FriendProfile = () => {
   const [profileDetails, setProfileDetails] = useState({
@@ -11,7 +12,8 @@ const FriendProfile = () => {
   });
   const chat = useSelector((store) => store?.ui);
   const dispatch = useDispatch();
-  const { addFriend, isLoading } = useAddFriend();
+  const { addFriend, isLoadingAdd } = useAddFriend();
+  const { remove, isLoadingRemove } = useRemoveFriend();
 
   useEffect(() => {
     if (chat?.profile === "friend") {
@@ -27,6 +29,9 @@ const FriendProfile = () => {
   const handleAddFriend = async () => {
     console.log(chat?.selectedChat?.FriendId, "iddd");
     await addFriend(chat?.selectedChat?.FriendId);
+  };
+  const handleRemoveFriend = async () => {
+    await remove(chat?.selectedChat?.FriendId);
   };
 
   return (
@@ -51,12 +56,20 @@ const FriendProfile = () => {
         <div>
           <div>
             <button
+              disabled={isLoadingAdd}
               onClick={handleAddFriend}
               className="btn   bg-blue-600 text-white hover:bg-blue-500"
             >
+              {isLoadingAdd ? (
+                <span className="loading loading-spinner loading-xs"></span>
+              ) : null}
               Add friend
             </button>
-            <button className="btn  bg-blue-600 text-white hover:bg-blue-500">
+            <button
+              onClick={handleRemoveFriend}
+              disabled={isLoadingRemove}
+              className="btn  bg-blue-600 text-white hover:bg-blue-500"
+            >
               Remove friend
             </button>
           </div>
