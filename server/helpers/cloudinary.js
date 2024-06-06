@@ -29,6 +29,12 @@ const uploadImagesToCloudinary = async (file, folder) => {
   return result.public_id;
 };
 const deleteImage = async (publicId) => {
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+    //secure: process.env.NODE_ENV !== "development",
+  });
   try {
     const result = await cloudinary.uploader.destroy(publicId);
     return result; // Return the result for further handling if needed
