@@ -89,7 +89,7 @@ exports.addFriend = async (req, res) => {
   } catch (error) {
     console.log(error, "adding friend error");
     if (error instanceof Error) {
-      res.status(400).json({ mesage: error.message });
+      res.status(400).json({ message: error.message });
     } else {
       res.status(500).json({ message: "server error" });
     }
@@ -125,7 +125,7 @@ exports.removeFriend = async (req, res) => {
   } catch (error) {
     console.log(error, "remove friend error");
     if (error instanceof Error) {
-      res.status(400).json({ mesage: error.message });
+      res.status(400).json({ message: error.message });
     } else {
       res.status(500).json({ message: "server error" });
     }
@@ -164,7 +164,7 @@ exports.blockFriend = async (req, res) => {
   } catch (error) {
     console.log(error, "blocking  friend error");
     if (error instanceof Error) {
-      res.status(400).json({ mesage: error.message });
+      res.status(400).json({ message: error.message });
     } else {
       res.status(500).json({ message: "server error" });
     }
@@ -200,7 +200,7 @@ exports.removeBlockedFriend = async (req, res) => {
   } catch (error) {
     console.log(error, "remove friend error");
     if (error instanceof Error) {
-      res.status(400).json({ mesage: error.message });
+      res.status(400).json({ message: error.message });
     } else {
       res.status(500).json({ message: "server error" });
     }
@@ -251,7 +251,7 @@ exports.getFriendList = async (req, res) => {
   } catch (error) {
     console.log(error, "get friendlist error");
     if (error instanceof Error) {
-      res.status(400).json({ mesage: error.message });
+      res.status(400).json({ message: error.message });
     } else {
       res.status(500).json({ message: "server error" });
     }
@@ -276,7 +276,7 @@ exports.getBlockedList = async (req, res) => {
   } catch (error) {
     console.log(error, "get blockedlist error");
     if (error instanceof Error) {
-      res.status(400).json({ mesage: error.message });
+      res.status(400).json({ message: error.message });
     } else {
       res.status(500).json({ message: "server error" });
     }

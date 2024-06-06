@@ -32,20 +32,18 @@ exports.login = async (req, res) => {
   } catch (error) {
     console.log(error, "sigup error");
     if (error instanceof Error) {
-      res.status(400).json({ mesage: error.message });
+      res.status(400).json({ message: error.message });
     } else {
       res.status(500).json({ message: "server error" });
     }
   }
 };
-
 exports.signup = async (req, res) => {
   const { username, email, password, confirmPassword } = req.body;
   try {
     if (!username || !password || !confirmPassword || !email) {
       throw new Error("All Fields must be filled");
     }
-
     if (!validator.isEmail(email)) {
       throw new Error("Email not valid");
     }
@@ -101,13 +99,12 @@ exports.signup = async (req, res) => {
     });
   } catch (error) {
     if (error instanceof Error) {
-      res.status(400).json({ mesage: error.message });
+      res.status(400).json({ message: error.message });
     } else {
       res.status(500).json({ message: "server error" });
     }
   }
 };
-
 exports.logout = (req, res) => {
   try {
     res.cookie("jwt", "", { maxAge: 0 });
@@ -117,7 +114,6 @@ exports.logout = (req, res) => {
     res.status(400).json({ message: "Internal server error" });
   }
 };
-
 exports.changePassword = async (req, res) => {
   try {
     const { oldPassword, newPassword, confirmPassword } = req.body;
@@ -151,7 +147,7 @@ exports.changePassword = async (req, res) => {
   } catch (error) {
     console.log(error, "sigup error");
     if (error instanceof Error) {
-      res.status(400).json({ mesage: error.message });
+      res.status(400).json({ message: error.message });
     } else {
       res.status(500).json({ message: "server error" });
     }
@@ -189,7 +185,7 @@ exports.forgotPassword = async (req, res) => {
   } catch (error) {
     console.log(error, "sigup error");
     if (error instanceof Error) {
-      res.status(400).json({ mesage: error.message });
+      res.status(400).json({ message: error.message });
     } else {
       res.status(500).json({ message: "server error" });
     }
