@@ -61,12 +61,14 @@ exports.updateProfile = async (req, res) => {
 exports.addFriend = async (req, res) => {
   try {
     const requestingUserId = req.user._id;
+
     const user = await User.findById(requestingUserId);
 
     if (!user) {
       throw new Error("user not found");
     }
     const { id: friendId } = req.params;
+    console.log(friendId, "friendid");
     const friend = await User.findById(friendId);
 
     if (!friend) {
@@ -115,7 +117,7 @@ exports.removeFriend = async (req, res) => {
     const friendIndex = friendList.friends.indexOf(friendId);
 
     if (friendIndex === -1) {
-      throw new Error("Friend not found in the list");
+      throw new Error("This user is not in friend list");
     }
 
     friendList.friends.splice(friendIndex, 1);
@@ -190,7 +192,7 @@ exports.removeBlockedFriend = async (req, res) => {
     const friendIndex = friendList.blocked.indexOf(friendId);
 
     if (friendIndex === -1) {
-      throw new Error("Friend not found in the list");
+      throw new Error("User is already unblocked");
     }
 
     friendList.blocked.splice(friendIndex, 1);

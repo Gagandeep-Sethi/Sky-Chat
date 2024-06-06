@@ -25,6 +25,8 @@ export const useAddFriend = () => {
       }
       if (response.ok) {
         console.log(json, " json");
+        toast.success("User added to friend list");
+
         dispatch(setFriends(json?.friends));
         setIsLoading(false);
       }

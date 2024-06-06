@@ -26,6 +26,8 @@ export const useRemoveFriend = () => {
       }
       if (response.ok) {
         console.log(json, " json");
+        toast.success("User removed from friend list");
+
         dispatch(setFriends(json?.friends));
         setIsLoading(false);
       }

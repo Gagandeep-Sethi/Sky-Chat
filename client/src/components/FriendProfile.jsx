@@ -5,6 +5,7 @@ import { setActiveComponent } from "../redux/uiSlice";
 import { useAddFriend } from "../utils/hooks/useAddFriend";
 import { useRemoveFriend } from "../utils/hooks/useRemoveFriend";
 import { useBlockFriend } from "../utils/hooks/useBlockFriend";
+import { useUnBlockFriend } from "../utils/hooks/useUnblockFriend";
 
 const FriendProfile = () => {
   const [profileDetails, setProfileDetails] = useState({
@@ -16,7 +17,7 @@ const FriendProfile = () => {
   const { addFriend, isLoadingAdd } = useAddFriend();
   const { remove, isLoadingRemove } = useRemoveFriend();
   const { block, isLoadingBlock } = useBlockFriend();
-
+  const { UnBlock, isLoadingUnBlock } = useUnBlockFriend();
   useEffect(() => {
     if (chat?.profile === "friend") {
       return setProfileDetails({
@@ -37,6 +38,9 @@ const FriendProfile = () => {
   };
   const handleBlockFriend = async () => {
     await block(chat?.selectedChat?.FriendId);
+  };
+  const handleUnBlockFriend = async () => {
+    await UnBlock(chat?.selectedChat?.FriendId);
   };
 
   return (
@@ -85,6 +89,13 @@ const FriendProfile = () => {
               className="btn  bg-blue-600 text-white hover:bg-blue-500"
             >
               Block User
+            </button>
+            <button
+              disabled={isLoadingUnBlock}
+              onClick={handleUnBlockFriend}
+              className="btn  bg-blue-600 text-white hover:bg-blue-500"
+            >
+              Unblock User
             </button>
           </div>
         </div>
