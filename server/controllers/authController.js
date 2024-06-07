@@ -4,6 +4,7 @@ const {
   generateTokenExpiry,
   generateVerificationToken,
 } = require("../helpers/tokenGeneration");
+const FriendList = require("../models/FriendList");
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
@@ -26,9 +27,21 @@ exports.login = async (req, res) => {
       throw new Error("Verify your Email !!");
     }
     generateJwtToken(user?._id, res);
-    res
-      .status(200)
-      .json({ email, username: user.username, profilePic: user?.profilePic });
+    const friendsList = await FriendList.findOne({ userId: user?._id });
+    let friends = [];
+    let blocked = [];
+    if (friendsList) {
+      console.log("list found");
+      friends = friendsList?.friends;
+      blocked = friendsList?.blocked;
+    }
+    res.status(200).json({
+      email,
+      username: user.username,
+      profilePic: user?.profilePic,
+      friends,
+      blocked,
+    });
   } catch (error) {
     console.log(error, "sigup error");
     if (error instanceof Error) {
@@ -111,7 +124,7 @@ exports.logout = (req, res) => {
     res.status(200).json({ message: "Logged Out Successful" });
   } catch (error) {
     console.log(error);
-    res.status(400).json({ message: "Internal server error" });
+    res.status(400).json({ message: "Error occured during logout" });
   }
 };
 exports.changePassword = async (req, res) => {

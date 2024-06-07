@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { IoMoonSharp } from "react-icons/io5";
+import { IoExitOutline, IoMoonSharp } from "react-icons/io5";
 import { IoIosSunny } from "react-icons/io";
+import { useLogout } from "../utils/hooks/useLogout";
 
 const Dropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const { logout, isLoading } = useLogout();
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -15,6 +17,9 @@ const Dropdown = () => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsOpen(false);
     }
+  };
+  const handleLogout = async () => {
+    await logout();
   };
 
   useEffect(() => {
@@ -40,31 +45,28 @@ const Dropdown = () => {
             aria-orientation="vertical"
             aria-labelledby="options-menu"
           >
-            <div>
+            <div className="mx-auto w-44 hover:bg-gray-100 ">
               <button
-                className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                disabled={isLoading}
+                onClick={handleLogout}
+                className="items-center flex mx-auto   py-2 gap-2   text-gray-700 hover:bg-gray-100"
                 role="menuitem"
-                onClick={() => setIsOpen(false)}
+                //onClick={() => setIsOpen(false)}
               >
-                Button 1
+                <IoExitOutline className="w-5 h-5 " /> Logout
               </button>
             </div>
-            <div>
-              <p>Theme</p>
+            <div className="flex items-center">
+              <p className="text-black mr-2">Theme</p>
 
-              <label className="swap swap-rotate text-black">
-                {/* this hidden checkbox controls the state */}
+              <label className="flex cursor-pointer gap-2">
+                {/* <IoIosSunny className=" text-yellow-400 w-6 h-6" /> */}
                 <input
                   type="checkbox"
-                  className="theme-controller"
                   value="synthwave"
+                  className="toggle theme-controller bg-amber-300 border-sky-400 [--tglbg:theme(colors.sky.500)] checked:bg-blue-300 checked:border-blue-800 checked:[--tglbg:theme(colors.blue.900)] row-start-1 col-start-1 col-span-2"
                 />
-
-                {/* sun icon */}
-                <IoIosSunny className="swap-off fill-current text-yellow-400 w-10 h-10" />
-
-                {/* moon icon */}
-                <IoMoonSharp className="swap-on text-indigo-700 fill-current w-10 h-10" />
+                {/* <IoMoonSharp className=" text-indigo-700  w-6 h-6" /> */}
               </label>
             </div>
           </div>
@@ -75,3 +77,17 @@ const Dropdown = () => {
 };
 
 export default Dropdown;
+// {/* <label className="swap swap-rotate text-black">
+//                 {/* this hidden checkbox controls the state */}
+//                 <input
+//                   type="checkbox"
+//                   className="theme-controller"
+//                   value="synthwave"
+//                 />
+
+//                 {/* sun icon */}
+//                 <IoIosSunny className="swap-off fill-current text-yellow-400 w-10 h-10" />
+
+//                 {/* moon icon */}
+//                 <IoMoonSharp className="swap-on text-indigo-700 fill-current w-10 h-10" />
+//               </label> */}
