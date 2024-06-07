@@ -1,13 +1,10 @@
 import { useState } from "react";
-//import { useDispatch } from "react-redux"
-//import { addUser } from "../store/userSlice"
 import { Fetch_Uri } from "../constants";
 
 export const useSignup = (formValue) => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
 
-  //const dispatch=useDispatch()
   const signup = async (formValue) => {
     const { email, password, confirmPassword, username } = formValue;
 
@@ -24,12 +21,10 @@ export const useSignup = (formValue) => {
     if (!response.ok) {
       console.log(json, "error json");
       setIsLoading(false);
-      setError(json.mesage);
+      setError(json.message);
     }
     if (response.ok) {
       console.log(json, "json");
-      localStorage.setItem("user", JSON.stringify(json)); //to store item in local storage of browser by name user
-      //dispatch(addUser(json))
       setIsLoading(false);
     }
   };
