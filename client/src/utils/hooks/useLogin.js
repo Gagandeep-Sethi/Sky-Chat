@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Fetch_Uri } from "../constants";
 import { addUser } from "../../redux/userSlice";
+import { setBlocked, setFriends } from "../../redux/userRelationsSlice";
 
 export const useLogin = (formValue) => {
   const [error, setError] = useState(null);
@@ -24,10 +25,12 @@ export const useLogin = (formValue) => {
     if (!response.ok) {
       console.log(json, "error json");
       setIsLoading(false);
-      setError(json.mesage);
+      setError(json.message);
     }
     if (response.ok) {
       dispatch(addUser(json));
+      dispatch(setFriends(json?.friends));
+      dispatch(setBlocked(json?.blocked));
       setIsLoading(false);
     }
   };
