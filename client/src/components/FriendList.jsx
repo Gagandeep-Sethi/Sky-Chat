@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import MessageContainer from "./MessageContainer";
 import { Fetch_Uri } from "../utils/constants";
+import Search from "./Search";
 
 const FriendList = () => {
   const [list, setList] = useState([]);
@@ -20,7 +21,8 @@ const FriendList = () => {
   return (
     <div>
       <p className="text-lg px-4 py-3">All Chat</p>
-      {list.length > 0 ? <MessageContainer list={list} /> : null}
+      {list.length > 0 ? <Search initialResults={list} /> : null}
+      {/* {list.length > 0 ? <MessageContainer list={list} /> : null} */}
     </div>
   );
 };
