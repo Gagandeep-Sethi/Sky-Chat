@@ -8,19 +8,37 @@ const Message = require("../models/Message");
 const User = require("../models/User");
 
 exports.search = async (req, res) => {
-  const keyword = req.query.search
-    ? {
-        $or: [
-          {
-            username: { $regex: req.query.search, $option: "i" },
-          },
-          {
-            email: { $regex: req.query.search, $option: "i" },
-          },
-        ],
-      }
-    : {};
-  const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
+  console.log("req reached");
+  try {
+    const requestingUserId = req.user._id;
+    const user = await User.findById(requestingUserId);
+    if (!user) {
+      throw new Error("user not found");
+    }
+    const { query } = req.query;
+
+    console.log(query, "query");
+
+    if (!query) {
+      return res.status(400).json({ message: "Query parameter is required" });
+    }
+
+    const users = await User.find({
+      $and: [
+        {
+          $or: [
+            { username: { $regex: query, $options: "i" } },
+            { email: { $regex: query, $options: "i" } },
+          ],
+        },
+        { _id: { $ne: requestingUserId } }, // Exclude requesting user
+      ],
+    }).select("username email profilePic _id"); // Select fields to return
+
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
 exports.updateProfile = async (req, res) => {
