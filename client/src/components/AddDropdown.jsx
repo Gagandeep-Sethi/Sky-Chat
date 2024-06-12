@@ -56,23 +56,25 @@ const AddDropdown = () => {
             aria-orientation="vertical"
             aria-labelledby="options-menu"
           >
-            <div className="mx-auto w-44 hover:bg-gray-300 rounded-xl">
+            <div
+              onClick={handleAddFriendClicked}
+              className="mx-auto w-44 hover:bg-gray-300 rounded-xl"
+            >
               <button
-                onClick={handleAddFriendClicked}
                 className="items-center flex mx-auto   py-2 gap-2   text-gray-700 "
                 role="menuitem"
-                //onClick={() => setIsOpen(false)}
               >
                 <PiUserCirclePlusFill className="text-black w-5 h-5" /> Add
                 friend
               </button>
             </div>
-            <div className="mx-auto w-44 hover:bg-gray-300 rounded-xl ">
+            <div
+              onClick={handleCreateGroupClicked}
+              className="mx-auto w-44 hover:bg-gray-300 rounded-xl "
+            >
               <button
-                onClick={handleCreateGroupClicked}
                 className="items-center flex mx-auto   py-2 gap-2   text-gray-700 "
                 role="menuitem"
-                //onClick={() => setIsOpen(false)}
               >
                 <HiUserGroup className="text-black w-5 h-5" /> Create group
               </button>
