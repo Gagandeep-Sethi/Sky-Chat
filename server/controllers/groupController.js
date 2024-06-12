@@ -1,9 +1,13 @@
+const { uploadImagesToCloudinary } = require("../helpers/cloudinary");
 const Chat = require("../models/Chat");
 
 exports.createGroupChat = async (req, res) => {
   try {
-    const { users, chatName } = req.body;
+    const { users, groupName } = req.body;
     const groupAdmin = req.user._id;
+    const file = req.files?.profilePic;
+    console.log(users, "users");
+    console.log(groupName, "name");
 
     if (!users || users.length < 2) {
       return res
@@ -13,10 +17,11 @@ exports.createGroupChat = async (req, res) => {
 
     // Adding groupAdmin to the users array
     const userIds = [...users, groupAdmin];
+    const filepath = await uploadImagesToCloudinary(file, "sky-chat/profile");
 
     // Check if a group with the same users and name already exists
     let group = await Chat.findOne({
-      chatName,
+      chatName: groupName,
       isGroupChat: true,
       users: { $all: userIds },
     });
@@ -29,9 +34,10 @@ exports.createGroupChat = async (req, res) => {
 
     // Create the new group chat
     group = await Chat.create({
-      chatName,
+      chatName: groupName,
       users: userIds,
       isGroupChat: true,
+      profilePic: filepath,
     });
     group.groupAdmin.push(groupAdmin);
     await group.save();
