@@ -88,3 +88,48 @@ exports.updateGroup = async (req, res) => {
     });
   }
 };
+exports.getGroupChats = async (req, res) => {
+  try {
+    const requestingUserId = req.user._id;
+
+    // Find all group chats the user is a part of
+    const groupChats = await Chat.find({
+      isGroupChat: true,
+      users: requestingUserId,
+    })
+      .populate("latestMessage")
+      .populate("users", "username profilePic");
+
+    // Format the group chat data
+    const groupChatsWithDetails = groupChats.map((groupChat) => {
+      const latestMessage = groupChat.latestMessage
+        ? groupChat.latestMessage.content
+        : "";
+      const chatTime = groupChat.latestMessage
+        ? groupChat.latestMessage.createdAt
+        : null;
+
+      return {
+        groupId: groupChat._id,
+        chatName: groupChat.chatName,
+        profilePic: groupChat.profilePic,
+        users: groupChat.users.map((user) => ({
+          userId: user._id,
+          username: user.username,
+          profilePic: user.profilePic,
+        })),
+        latestMessage,
+        chatTime,
+      };
+    });
+
+    res.status(200).json(groupChatsWithDetails);
+  } catch (error) {
+    console.log(error, "get group chats error");
+    if (error instanceof Error) {
+      res.status(400).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+};
