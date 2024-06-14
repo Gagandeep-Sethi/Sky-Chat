@@ -17,7 +17,7 @@ const Conversation = () => {
   useEffect(() => {
     async function getData() {
       const response = await fetch(
-        `${Fetch_Uri}/api/message/${selectedChat.friendId}`,
+        `${Fetch_Uri}/api/message/${selectedChat?.FriendId}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -33,40 +33,12 @@ const Conversation = () => {
   function handleArrowClicked() {
     dispatch(setActiveComponent("sidebar"));
   }
-  // return (
-  //   <div className="relative w-full h-full items-center scrollbar-none overflow-y-auto overflow-x-hidden md:border-r border-gray-400">
-  //     <div className=" flex gap-6 md:justify-center items-center w-full md:py-3 pt-2.5 pb-1.5 sticky bg-neutral-900 top-0  z-10 ">
-  //       <FaArrowLeft
-  //         onClick={handleArrowClicked}
-  //         className="md:hidden w-6 h-6 ml-6"
-  //       />
 
-  //       <div className="avatar ">
-  //         <div className="w-9 rounded-full">
-  //           <img
-  //             src={`https://res.cloudinary.com/dyja4tbmu/${selectedChat?.profilePic}.jpg`}
-  //             alt=""
-  //           />
-  //         </div>
-  //       </div>
-  //       <p onClick={handleProfileClick} className="text-lg cursor-pointer">
-  //         {selectedChat?.username}
-  //       </p>
-  //     </div>
-
-  //     <div className="w-full  flex-1">
-  //       <Chatting chat={chat} friendPic={selectedChat?.profilePic} />
-  //     </div>
-  //     <div className="   sticky bottom-1 w-full  ">
-  //       <SendMessage id={selectedChat.friendId} />
-  //     </div>
-  //   </div>
-  // );
   return (
     // <div className="h-full w-full bg-[url('./images/bg.png')] bg-cover bg-center">
     //   <div className="flex flex-col h-full w-full bg-[url('./images/light.png')] bg-cover bg-center  items-center scrollbar-none overflow-y-auto overflow-x-hidden md:border-r border-gray-400">
     <div className="h-full w-full bg-neutral-900">
-      <div className="flex flex-col h-full w-full  items-center scrollbar-none overflow-y-auto overflow-x-hidden md:border-r border-gray-400">
+      <div className="flex flex-col h-full w-full  items-center scrollbar-none overflow-y-auto overflow-x-hidden ">
         <div className="flex gap-6 md:justify-center items-center w-full md:py-3 pt-2.5 pb-1.5 sticky bg-neutral-900 top-0 z-10">
           <FaArrowLeft
             onClick={handleArrowClicked}
@@ -87,10 +59,10 @@ const Conversation = () => {
         </div>
 
         <div className="flex-1 w-full overflow-y-auto">
-          <Chatting chat={chat} friendPic={selectedChat?.profilePic} />
+          <Chatting chat={chat} />
         </div>
         <div className="sticky bottom-1 w-full ">
-          <SendMessage id={selectedChat.friendId} />
+          <SendMessage id={selectedChat?.FriendId} />
         </div>
       </div>
     </div>
