@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { ChatTime } from "../utils/helpers/functions";
 
-const Chatting = ({ chat, friendPic }) => {
+const Chatting = ({ chat }) => {
   const user = useSelector((store) => store?.user);
   console.log(chat, "chatccc");
   return (
@@ -23,15 +23,13 @@ const Chatting = ({ chat, friendPic }) => {
                   <div className="w-10 rounded-full">
                     <img
                       alt=""
-                      src={`https://res.cloudinary.com/dyja4tbmu/${
-                        msg?.senderId?.username === user?.username
-                          ? user?.profilePic
-                          : friendPic
-                      }.jpg`}
+                      src={`https://res.cloudinary.com/dyja4tbmu/${msg?.senderId?.profilePic}.jpg`}
                     />
                   </div>
                 </div>
-
+                <div className="chat-header text-xs">
+                  {msg?.senderId?.username}
+                </div>
                 <div
                   className={`chat-bubble ${
                     msg?.senderId?.username === user?.username
@@ -40,7 +38,6 @@ const Chatting = ({ chat, friendPic }) => {
                   } max-w-60 md:max-w-72 break-words overflow-hidden chat-`}
                 >
                   {msg?.content}
-                  sdsshdfsdhsfdhsdfshdfshdfsh
                 </div>
                 <div className="chat-footer opacity-50">
                   <time className="text-xs opacity-50">
