@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 export const formatChatTime = (chatTime) => {
   const date = new Date(chatTime);
   const now = new Date();
@@ -23,4 +25,30 @@ export const ChatTime = (chatTime) => {
   const date = new Date(chatTime);
   const options = { hour: "numeric", minute: "numeric", hour12: true };
   return date.toLocaleTimeString("en-US", options);
+};
+
+export const fetchWrapper = async (url, options = {}) => {
+  console.log(options, "options");
+  try {
+    const response = await fetch(url, {
+      ...options,
+      credentials: "include", // Include credentials (cookies)
+    });
+
+    if (!response.ok) {
+      console.log("response not ok");
+      const error = await response.json();
+      if (response.status === 401 || response.status === 403) {
+        toast.error("Your login session expired please login again");
+        return { unauthorized: true };
+      }
+      return { error };
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("There was a problem with the fetch operation:", error);
+    throw error;
+  }
 };
