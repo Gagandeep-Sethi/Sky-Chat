@@ -102,12 +102,10 @@ exports.signup = async (req, res) => {
       user.email,
       "Email Verification",
       `Click the following link to verify your email: ${process.env.DOMAIN}/verify?token=${user.verifyToken}`,
-      `<p>Click the following link to verify your email: <a href="${process.env.DOMAIN}/api/users/verify?token=${user.verifyToken}&action=verify-email">Verify Email</a></p>`
+      `<p>Click the following link to verify your email: <a href="${process.env.DOMAIN}/verify?token=${user.verifyToken}&action=verify-email">Verify Email</a></p>`
     );
 
     res.status(200).json({
-      email,
-      username: user.username,
       message: "Verification link send to your email please verify !!",
     });
   } catch (error) {
@@ -188,7 +186,7 @@ exports.forgotPassword = async (req, res) => {
       user.email,
       "Reset Password",
       `Click the following link to reset your password: ${process.env.DOMAIN}/verify?token=${user.forgotPasswordToken}`,
-      `<p>Click the following link to verify your email: <a href="${process.env.DOMAIN}/api/users/verify?token=${user.forgotPasswordToken}&action=reset-password">Verify Email</a></p>`
+      `<p>Click the following link to verify your email: <a href="${process.env.DOMAIN}/verify?token=${user.forgotPasswordToken}&action=reset-password">Verify Email</a></p>`
     );
 
     return NextResponse.json(
@@ -215,6 +213,9 @@ exports.verifyEmail = async (req, res) => {
       const user = await User.findOne({ verifyToken: token });
 
       if (!user || user.verifyTokenExpiry < Date.now()) {
+        if (user) {
+          await User.deleteOne({ _id: user._id }); // Remove the user from the database
+        }
         // Token is invalid or expired
         return res.status(400).json({
           message: "Invalid or expired token please try to signup again",
@@ -228,7 +229,9 @@ exports.verifyEmail = async (req, res) => {
       await user.save();
 
       // Redirect to a verification success page
-      return res.redirect(`${process.env.DOMAIN}/user/verified`);
+      return res.status(200).json({
+        message: "Verification Successful! Thank you for verifying your email.",
+      });
     }
 
     //if the verification is for forgot password
@@ -244,16 +247,51 @@ exports.verifyEmail = async (req, res) => {
         });
       }
 
-      return res.redirect(
-        `${process.env.DOMAIN}/user/resetPassword?email=${encodeURIComponent(
-          user.email
-        )}&token=${encodeURIComponent(token)}`
-      );
+      return res.status(200).json({
+        message: "Redirecting to password reset page...",
+        email: user.email,
+      });
     }
-    return res
-      .status(400)
-      .json({ message: "Something went wrong Please try again !!" });
+    return res.status(400).json({
+      message: "Something went wrong. Please try again!",
+    });
   } catch (error) {
     return res.status(400).json({ message: "Error verifying user" });
+  }
+};
+exports.resetPassword = async (req, res) => {
+  try {
+    const { token, newPassword, confirmPassword } = req.body;
+
+    if (!newPassword || !confirmPassword || !token) {
+      throw new Error("All fields must be filed");
+    }
+    if (!validator.isStrongPassword(newPassword)) {
+      throw new Error("Password not strong");
+    }
+    if (newPassword !== confirmPassword) {
+      throw new Error("confirm Password doesn't match");
+    }
+    const user = await User.findOne({ forgotPasswordToken: token });
+
+    if (!user) {
+      throw new Error("Server error occured please try again");
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(newPassword, salt);
+    user.password = hashPassword;
+    user.forgotPasswordToken = null;
+    user.forgotPasswordTokenExpiry = null;
+    await user.save();
+    return res.json(
+      { message: "Password updated please login" },
+      { status: 200 }
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.json({ message: error.message }, { status: 400 });
+    } else {
+      return res.json({ message: "Something went wrong" }, { status: 500 });
+    }
   }
 };

@@ -10,6 +10,8 @@ import Signup from "./components/Signup";
 import Signin from "./components/Signin";
 import { useSelector } from "react-redux";
 import Error from "./components/Error";
+import EmailVerified from "./components/EmailVerified";
+import ResetPassword from "./components/ResetPassword";
 
 function App() {
   const user = useSelector((store) => store?.user?.username);
@@ -30,6 +32,8 @@ function App() {
             path="/signup"
             element={user ? <Navigate to="/" /> : <Signup />}
           />
+          <Route path="/verify" element={<EmailVerified />} />
+          <Route path="/user/resetPassword" element={<ResetPassword />} />
           <Route path="*" element={<Error />} />
         </Routes>
       </Router>
