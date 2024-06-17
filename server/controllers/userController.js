@@ -83,35 +83,53 @@ exports.addFriend = async (req, res) => {
     const user = await User.findById(requestingUserId);
 
     if (!user) {
-      throw new Error("user not found");
+      throw new Error("User not found");
     }
     const { id: friendId } = req.params;
-    console.log(friendId, "friendid");
+    console.log(friendId, "friendId");
     const friend = await User.findById(friendId);
 
     if (!friend) {
       throw new Error("User you are trying to add not found");
     }
 
-    let friendList = await FriendList.findOne({ userId: requestingUserId });
-    if (friendList) {
-      if (friendList.friends.includes(friendId)) {
-        throw new Error("User already in your friendlist");
-      } else friendList.friends.push(friendId);
+    // Add the friend to the requesting user's friend list
+    let requestingUserFriendList = await FriendList.findOne({
+      userId: requestingUserId,
+    });
+    if (requestingUserFriendList) {
+      if (requestingUserFriendList.friends.includes(friendId)) {
+        throw new Error("User already in your friend list");
+      } else requestingUserFriendList.friends.push(friendId);
     } else {
-      friendList = await FriendList.create({
+      requestingUserFriendList = await FriendList.create({
         userId: requestingUserId,
+        friends: [friendId],
       });
-      friendList.friends.push(friendId);
     }
-    await friendList.save();
-    res.status(200).json(friendList);
+    await requestingUserFriendList.save();
+
+    // Add the requesting user to the friend's friend list
+    let friendUserFriendList = await FriendList.findOne({ userId: friendId });
+    if (friendUserFriendList) {
+      if (!friendUserFriendList.friends.includes(requestingUserId)) {
+        friendUserFriendList.friends.push(requestingUserId);
+        await friendUserFriendList.save();
+      }
+    } else {
+      await FriendList.create({
+        userId: friendId,
+        friends: [requestingUserId],
+      });
+    }
+
+    res.status(200).json(requestingUserFriendList);
   } catch (error) {
     console.log(error, "adding friend error");
     if (error instanceof Error) {
       res.status(400).json({ message: error.message });
     } else {
-      res.status(500).json({ message: "server error" });
+      res.status(500).json({ message: "Server error" });
     }
   }
 };
@@ -119,27 +137,37 @@ exports.addFriend = async (req, res) => {
 exports.removeFriend = async (req, res) => {
   try {
     const requestingUserId = req.user._id;
-    const user = await User.findById(requestingUserId);
     const { id: friendId } = req.params;
 
+    // Find the requesting user and their friend list
+    const user = await User.findById(requestingUserId);
     if (!user) {
-      throw new Error("user not found");
+      throw new Error("User not found");
     }
 
     const friendList = await FriendList.findOne({ userId: requestingUserId });
-
     if (!friendList) {
-      throw new Error("Friend list not found ");
+      throw new Error("Friend list not found");
     }
 
+    // Remove friend from requesting user's friend list
     const friendIndex = friendList.friends.indexOf(friendId);
-
     if (friendIndex === -1) {
-      throw new Error("This user is not in friend list");
+      throw new Error("This user is not in your friend list");
     }
-
     friendList.friends.splice(friendIndex, 1);
     await friendList.save();
+
+    // Find the friend's friend list and remove requesting user from it
+    const friendUserFriendList = await FriendList.findOne({ userId: friendId });
+    if (friendUserFriendList) {
+      const requestingUserIndex =
+        friendUserFriendList.friends.indexOf(requestingUserId);
+      if (requestingUserIndex !== -1) {
+        friendUserFriendList.friends.splice(requestingUserIndex, 1);
+        await friendUserFriendList.save();
+      }
+    }
 
     return res.status(200).json(friendList);
   } catch (error) {
@@ -147,7 +175,7 @@ exports.removeFriend = async (req, res) => {
     if (error instanceof Error) {
       res.status(400).json({ message: error.message });
     } else {
-      res.status(500).json({ message: "server error" });
+      res.status(500).json({ message: "Server error" });
     }
   }
 };
