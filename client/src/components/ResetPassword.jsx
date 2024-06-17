@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { useLogin } from "../utils/hooks/useLogin";
 import { Link, useLocation } from "react-router-dom";
+import { useResetPassword } from "../utils/hooks/useResetPassword";
 const ResetPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const location = useLocation();
@@ -25,7 +25,7 @@ const ResetPassword = () => {
     newPassword: "",
     confirmPassword: "",
   });
-  const { reset, isLoading, error } = useLogin();
+  const { reset, isLoading, error } = useResetPassword();
   const handleSubmit = async (e) => {
     e.preventDefault();
     await reset(formValue);

@@ -189,10 +189,9 @@ exports.forgotPassword = async (req, res) => {
       `<p>Click the following link to verify your email: <a href="${process.env.DOMAIN}/verify?token=${user.forgotPasswordToken}&action=reset-password">Verify Email</a></p>`
     );
 
-    return NextResponse.json(
-      { message: "Reset password link sent to your email please checkout" },
-      { status: 200 }
-    );
+    return res.status(200).json({
+      message: "Reset password link sent to your email please checkout",
+    });
   } catch (error) {
     console.log(error, "sigup error");
     if (error instanceof Error) {
@@ -283,15 +282,12 @@ exports.resetPassword = async (req, res) => {
     user.forgotPasswordToken = null;
     user.forgotPasswordTokenExpiry = null;
     await user.save();
-    return res.json(
-      { message: "Password updated please login" },
-      { status: 200 }
-    );
+    return res.status(200).json({ message: "Password updated please login" });
   } catch (error) {
     if (error instanceof Error) {
-      return res.json({ message: error.message }, { status: 400 });
+      return res.status(400).json({ message: error.message });
     } else {
-      return res.json({ message: "Something went wrong" }, { status: 500 });
+      return res.status(500).json({ message: "Something went wrong" });
     }
   }
 };
