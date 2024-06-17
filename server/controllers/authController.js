@@ -127,10 +127,19 @@ exports.logout = (req, res) => {
 };
 exports.changePassword = async (req, res) => {
   try {
-    const { oldPassword, newPassword, confirmPassword } = req.body;
+    const { currentPassword, newPassword, confirmPassword } = req.body;
     const userId = req.user._id;
-    if (!oldPassword || !newPassword || !confirmPassword) {
+    const user = await User.findById(userId);
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
       throw new Error("All fields must be filed");
+    }
+    const passwordCheck = await bcrypt.compare(
+      currentPassword,
+      user.password || ""
+    );
+    if (!passwordCheck) {
+      throw new Error("Wrong password");
     }
     if (!validator.isStrongPassword(newPassword)) {
       throw new Error("password not strong");
@@ -139,14 +148,12 @@ exports.changePassword = async (req, res) => {
       throw new Error("Confirm password doesn't match");
     }
 
-    const user = await User.findById(userId);
-
     if (!user) {
       return res
         .status(400)
         .json({ message: "User not found please try again" });
     }
-    const match = await bcrypt.compare(oldPassword, user.password);
+    const match = await bcrypt.compare(currentPassword, user.password);
     if (!match) {
       return res.status(400).json({ message: "Old password doesn't match" });
     }
@@ -154,6 +161,7 @@ exports.changePassword = async (req, res) => {
     const hashPassword = await bcrypt.hash(newPassword, salt);
     user.password = hashPassword;
     await user.save();
+    res.cookie("jwt", "", { maxAge: 0 });
     return res.status(200).json({ message: "Password updated please login" });
   } catch (error) {
     console.log(error, "sigup error");

@@ -18,7 +18,6 @@ const requireAuth = async (req, res, next) => {
     if (!user) {
       return res.status(401).json({ message: "user not found" });
     }
-
     req.user = user; //we are attaching user property to req and passing it on to next middleware of main function and we can use that tha user property as we know now the user is authenticated
     next();
   } catch (error) {
