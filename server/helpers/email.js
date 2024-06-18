@@ -10,9 +10,9 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendEmail = async (email, subject, text, html) => {
+const sendEmail = (email, subject, text, html) => {
   try {
-    let info = await transporter.sendMail({
+    let info = transporter.sendMail({
       from: {
         name: "Sky-Shop",
         address: process.env.EMAIL_USER,
