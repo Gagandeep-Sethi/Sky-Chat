@@ -3,12 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 const uiSlice = createSlice({
   name: "ui",
   initialState: {
-    activeComponent: "sidebar", // 'sidebar', 'chat', 'profile'
-    profile: "", //own or friend
+    activeComponent: "sidebar", // 'sidebar', 'chat', 'profile',group
+    profile: "", //own or friend or group
     selectedChat: {
       username: "",
       profilePic: "",
       FriendId: "",
+      isGroupchat: false,
     },
   },
   reducers: {
