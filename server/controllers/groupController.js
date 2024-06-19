@@ -212,5 +212,81 @@ exports.removeUsers = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
-exports.makeAdmin = async (req, res) => {};
-exports.removeAdmin = async (req, res) => {};
+exports.makeAdmin = async (req, res) => {
+  const { chatId, userId } = req.body;
+  const requestingUser = req.user._id;
+
+  try {
+    // Find the chat by ID
+    const chat = await Chat.findById(chatId);
+
+    if (!chat) {
+      return res.status(404).json({ error: "Chat not found" });
+    }
+
+    // Check if the chat is a group chat
+    if (!chat.isGroupChat) {
+      return res.status(400).json({ error: "Not a group chat" });
+    }
+
+    // Check if the requesting user is an admin
+    if (
+      !chat.groupAdmin.some(
+        (admin) => admin._id.toString() === requestingUser.toString()
+      )
+    ) {
+      return res.status(403).json({ error: "Requesting user is not an admin" });
+    }
+
+    // Check if the user is already an admin
+    if (
+      chat.groupAdmin.some(
+        (admin) => admin._id.toString() === userId.toString()
+      )
+    ) {
+      return res.status(400).json({ error: "User is already an admin" });
+    }
+
+    // Add the user to the groupAdmin array
+    chat.groupAdmin.push(userId);
+    await chat.save();
+
+    res.status(200).json({ message: "User promoted to admin", chat });
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
+  }
+};
+exports.leaveGroup = async (req, res) => {
+  const { chatId } = req.body;
+  const requestingUser = req.user._id;
+
+  try {
+    // Find the chat by ID
+    const chat = await Chat.findById(chatId);
+
+    if (!chat) {
+      return res.status(404).json({ error: "Chat not found" });
+    }
+
+    // Check if the chat is a group chat
+    if (!chat.isGroupChat) {
+      return res.status(400).json({ error: "Not a group chat" });
+    }
+
+    // Remove the user from the users array
+    chat.users = chat.users.filter(
+      (user) => user.toString() !== requestingUser.toString()
+    );
+
+    // Remove the user from the groupAdmin array if they are an admin
+    chat.groupAdmin = chat.groupAdmin.filter(
+      (admin) => admin.toString() !== requestingUser.toString()
+    );
+
+    await chat.save();
+
+    res.status(200).json({ message: "User has left the group", chat });
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
+  }
+};
