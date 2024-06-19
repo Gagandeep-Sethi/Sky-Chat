@@ -48,7 +48,7 @@ exports.createGroupChat = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
-exports.updateGroup = async (req, res) => {
+exports.updateGroupProfile = async (req, res) => {
   try {
     const { chatId, chatName } = req.body;
 
@@ -98,6 +98,7 @@ exports.getGroupChats = async (req, res) => {
       users: requestingUserId,
     })
       .populate("latestMessage")
+      .populate("chatName")
       .populate("users", "username profilePic");
 
     // Format the group chat data
@@ -133,3 +134,83 @@ exports.getGroupChats = async (req, res) => {
     }
   }
 };
+exports.groupInfo = async (req, res) => {
+  console.log("req reached");
+  try {
+    const chatId = req.params.id;
+    const chat = await Chat.findById(chatId)
+      .populate("users", "username profilePic")
+      .populate("groupAdmin", "username");
+
+    if (!chat || !chat.isGroupChat) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    res.status(200).json(chat);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+exports.addUsers = async (req, res) => {
+  const { chatId, userIds } = req.body;
+
+  try {
+    // Find the chat by ID
+    const chat = await Chat.findById(chatId);
+
+    if (!chat) {
+      return res.status(404).json({ error: "Chat not found" });
+    }
+
+    // Check if the chat is a group chat
+    if (!chat.isGroupChat) {
+      return res.status(400).json({ error: "Not a group chat" });
+    }
+
+    // Filter out users who are already in the group
+    const newUsers = userIds.filter((userId) => !chat.users.includes(userId));
+
+    // Add the new users to the group
+    chat.users.push(...newUsers);
+    await chat.save();
+
+    res.status(200).json({ message: "Users added to the group", chat });
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
+  }
+};
+exports.removeUsers = async (req, res) => {
+  const { chatId, userId } = req.body;
+
+  try {
+    // Find the chat by ID
+    const chat = await Chat.findById(chatId);
+
+    if (!chat) {
+      return res.status(404).json({ error: "Chat not found" });
+    }
+
+    // Check if the chat is a group chat
+    if (!chat.isGroupChat) {
+      return res.status(400).json({ error: "Not a group chat" });
+    }
+
+    // Check if the user is in the group
+    const userIndex = chat.users.indexOf(userId);
+
+    if (userIndex === -1) {
+      return res.status(400).json({ error: "User not in group" });
+    }
+
+    // Remove the user from the group
+    chat.users.splice(userIndex, 1);
+    await chat.save();
+
+    res.status(200).json({ message: "User removed from the group", chat });
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
+  }
+};
+exports.makeAdmin = async (req, res) => {};
+exports.removeAdmin = async (req, res) => {};
