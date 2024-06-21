@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { FaArrowLeft, FaEllipsisV } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { setActiveComponent } from "../redux/uiSlice";
 import { removeUser } from "../redux/userSlice";
 import { clearBlocked, clearFriends } from "../redux/userRelationsSlice";
 import { fetchWrapper } from "../utils/helpers/functions";
 import { Fetch_Uri } from "../utils/constants";
+import MemberDropdown from "./MemberDropdown";
 
 const GroupProfile = () => {
   const [group, setGroup] = useState(null);
@@ -45,11 +46,14 @@ const GroupProfile = () => {
   }, [FriendId, dispatch]);
 
   const handleArrowClicked = () => {
-    dispatch(setActiveComponent("sidebar"));
+    dispatch(setActiveComponent("chat"));
+  };
+  const isAdmin = (memberId) => {
+    return group.groupAdmin.some((admin) => admin._id === memberId);
   };
 
-  const handleMakeAdmin = async (memberId) => {
-    // Function to handle making a member an admin
+  const isLoggedInUserAdmin = () => {
+    return group.groupAdmin.some((admin) => admin.username === user.username);
   };
 
   if (!group) {
@@ -74,7 +78,9 @@ const GroupProfile = () => {
               className="w-full h-full object-center object-cover"
             />
           </div>
-          <p className="text-lg font-extralight py-3">{group?.chatName}</p>
+          <p className="text-lg text-center text-white font-extralight py-3">
+            {group?.chatName}
+          </p>
         </div>
         <div className="w-full px-4">
           {group?.users.map((member) => (
@@ -90,15 +96,14 @@ const GroupProfile = () => {
                 />
                 <p className="text-white">{member.username}</p>
               </div>
-              <div className="flex items-center gap-2">
-                {group.groupAdmin.includes(member._id) && (
-                  <span className="text-green-500">Admin</span>
+              <div className="flex items-center gap-2 ">
+                {isAdmin(member._id) && (
+                  <span className="text-green-500 text-xs p-1 border rounded-lg  border-green-400">
+                    Admin
+                  </span>
                 )}
-                {group.groupAdmin.includes(user._id) && (
-                  <FaEllipsisV
-                    className="text-white cursor-pointer"
-                    onClick={() => handleMakeAdmin(member._id)}
-                  />
+                {isLoggedInUserAdmin && !isAdmin(member._id) && (
+                  <MemberDropdown userId={member._id} chatId={FriendId} />
                 )}
               </div>
             </div>
