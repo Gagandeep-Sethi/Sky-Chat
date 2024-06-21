@@ -160,12 +160,12 @@ exports.addUsers = async (req, res) => {
     const chat = await Chat.findById(chatId);
 
     if (!chat) {
-      return res.status(404).json({ error: "Chat not found" });
+      return res.status(404).json({ message: "Chat not found" });
     }
 
     // Check if the chat is a group chat
     if (!chat.isGroupChat) {
-      return res.status(400).json({ error: "Not a group chat" });
+      return res.status(400).json({ message: "Not a group chat" });
     }
 
     // Filter out users who are already in the group
@@ -177,10 +177,10 @@ exports.addUsers = async (req, res) => {
 
     res.status(200).json({ message: "Users added to the group", chat });
   } catch (error) {
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 };
-exports.removeUsers = async (req, res) => {
+exports.removeUser = async (req, res) => {
   const { chatId, userId } = req.body;
 
   try {
@@ -188,19 +188,19 @@ exports.removeUsers = async (req, res) => {
     const chat = await Chat.findById(chatId);
 
     if (!chat) {
-      return res.status(404).json({ error: "Chat not found" });
+      return res.status(404).json({ message: "Chat not found" });
     }
 
     // Check if the chat is a group chat
     if (!chat.isGroupChat) {
-      return res.status(400).json({ error: "Not a group chat" });
+      return res.status(400).json({ message: "Not a group chat" });
     }
 
     // Check if the user is in the group
     const userIndex = chat.users.indexOf(userId);
 
     if (userIndex === -1) {
-      return res.status(400).json({ error: "User not in group" });
+      return res.status(400).json({ message: "User not in group" });
     }
 
     // Remove the user from the group
@@ -209,7 +209,7 @@ exports.removeUsers = async (req, res) => {
 
     res.status(200).json({ message: "User removed from the group", chat });
   } catch (error) {
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 };
 exports.makeAdmin = async (req, res) => {
@@ -221,12 +221,12 @@ exports.makeAdmin = async (req, res) => {
     const chat = await Chat.findById(chatId);
 
     if (!chat) {
-      return res.status(404).json({ error: "Chat not found" });
+      return res.status(404).json({ message: "Chat not found" });
     }
 
     // Check if the chat is a group chat
     if (!chat.isGroupChat) {
-      return res.status(400).json({ error: "Not a group chat" });
+      return res.status(400).json({ message: "Not a group chat" });
     }
 
     // Check if the requesting user is an admin
@@ -235,7 +235,9 @@ exports.makeAdmin = async (req, res) => {
         (admin) => admin._id.toString() === requestingUser.toString()
       )
     ) {
-      return res.status(403).json({ error: "Requesting user is not an admin" });
+      return res
+        .status(403)
+        .json({ message: "Requesting user is not an admin" });
     }
 
     // Check if the user is already an admin
@@ -244,7 +246,7 @@ exports.makeAdmin = async (req, res) => {
         (admin) => admin._id.toString() === userId.toString()
       )
     ) {
-      return res.status(400).json({ error: "User is already an admin" });
+      return res.status(400).json({ message: "User is already an admin" });
     }
 
     // Add the user to the groupAdmin array
@@ -253,7 +255,7 @@ exports.makeAdmin = async (req, res) => {
 
     res.status(200).json({ message: "User promoted to admin", chat });
   } catch (error) {
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 };
 exports.leaveGroup = async (req, res) => {
@@ -265,12 +267,12 @@ exports.leaveGroup = async (req, res) => {
     const chat = await Chat.findById(chatId);
 
     if (!chat) {
-      return res.status(404).json({ error: "Chat not found" });
+      return res.status(404).json({ message: "Chat not found" });
     }
 
     // Check if the chat is a group chat
     if (!chat.isGroupChat) {
-      return res.status(400).json({ error: "Not a group chat" });
+      return res.status(400).json({ message: "Not a group chat" });
     }
 
     // Remove the user from the users array
@@ -287,6 +289,6 @@ exports.leaveGroup = async (req, res) => {
 
     res.status(200).json({ message: "User has left the group", chat });
   } catch (error) {
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ message: "Server error" });
   }
 };
