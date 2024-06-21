@@ -4,6 +4,9 @@ import { setActiveComponent } from "../redux/uiSlice";
 import { useDispatch } from "react-redux";
 import { Fetch_Uri } from "../utils/constants";
 import toast from "react-hot-toast";
+import { fetchWrapper } from "../utils/helpers/functions";
+import { removeUser } from "../redux/userSlice";
+import { clearBlocked, clearFriends } from "../redux/userRelationsSlice";
 
 const UserSelection = ({ onProceed }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,26 +18,29 @@ const UserSelection = ({ onProceed }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${Fetch_Uri}/api/user/getFriends`, {
-          method: "Get",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(),
-          credentials: "include", //this will let it set cookie
-        });
-        const data = await response.json();
-        console.log(data, "data11");
+        const response = await fetchWrapper(
+          `${Fetch_Uri}/api/user/getFriends`,
+          {
+            method: "Get",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(),
+          }
+        );
 
-        if (!response.ok) {
-          console.log("error");
-          toast.error(data?.message);
+        if (response.unauthorized) {
+          dispatch(removeUser());
+          dispatch(clearFriends());
+          dispatch(clearBlocked());
+        } else if (response.error) {
+          toast.error(response.error?.message || "An error occurred");
         }
-        setInitialUsers(data);
-        setFilteredUsers(data);
+        setInitialUsers(response);
+        setFilteredUsers(response);
       } catch (error) {}
     };
 
     fetchUsers();
-  }, []);
+  }, [dispatch]);
 
   const handleSearch = (event) => {
     const term = event.target.value;

@@ -2,12 +2,16 @@ import { Fetch_Uri } from "../utils/constants";
 import { FaArrowLeft } from "react-icons/fa6";
 import React, { useState } from "react";
 import { TbCameraPlus } from "react-icons/tb";
+import { fetchWrapper } from "../utils/helpers/functions";
+import toast from "react-hot-toast";
+import { useLogout } from "../utils/hooks/useLogout";
 
 const GroupCreation = ({ selectedUsers, onBack }) => {
   const [groupName, setGroupName] = useState("");
   const [profilePic, setProfilePic] = useState(null);
   const [previewPic, setPreviewPic] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { logout } = useLogout();
 
   const handleCreateGroup = async () => {
     setIsLoading(true);
@@ -19,16 +23,19 @@ const GroupCreation = ({ selectedUsers, onBack }) => {
       formData.append("users", user.friendId);
     });
     try {
-      const response = await fetch(`${Fetch_Uri}/api/group/create`, {
+      const response = await fetchWrapper(`${Fetch_Uri}/api/group/create`, {
         method: "POST",
-        //headers: { "Content-Type": "application/json" },
         body: formData,
-        credentials: "include", //this will let it set cookie
       });
-      const json = await response.json();
-      console.log(json, "json");
+      if (response.unauthorized) {
+        await logout(); // Perform the logout if the fetch wrapper indicates an unauthorized response
+      } else if (response.error) {
+        toast.error(response.error?.message || "An error occurred");
+      }
+    } catch (error) {
+    } finally {
       setIsLoading(false);
-    } catch (error) {}
+    }
   };
 
   const handleProfilePicChange = (event) => {
