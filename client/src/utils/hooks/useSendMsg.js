@@ -1,33 +1,42 @@
 import { useState } from "react";
 import { Fetch_Uri } from "../constants";
 import toast from "react-hot-toast";
+import { fetchWrapper } from "../helpers/functions";
+import { removeUser } from "../../redux/userSlice";
+import { clearBlocked, clearFriends } from "../../redux/userRelationsSlice";
+import { useDispatch } from "react-redux";
 
 export const useSendMsg = () => {
-  const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
+  const dispatch = useDispatch();
 
   const sendMsg = async (content, id) => {
     setIsLoading(true);
-    setError(null);
-    const response = await fetch(`${Fetch_Uri}/api/message/send/${id}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content }),
-      credentials: "include", //this will let it set cookie
-    });
-    const json = await response.json();
+    try {
+      const response = await fetchWrapper(
+        `${Fetch_Uri}/api/message/send/${id}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content }),
+        }
+      );
 
-    if (!response.ok) {
-      console.log(json, "error json");
-      toast.error("error sending message");
-      setIsLoading(false);
-      setError(json.mesage);
-    }
-    if (response.ok) {
-      setError(json.mesage);
-      console.log(json, " json");
+      if (response.unauthorized) {
+        dispatch(removeUser());
+        dispatch(clearFriends());
+        dispatch(clearBlocked());
+      } else if (response.error) {
+        toast.error("error sending message");
+      } else {
+        console.log(response, " json");
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+      toast.error("An error occurred");
+    } finally {
       setIsLoading(false);
     }
   };
-  return { sendMsg, isLoading, error };
+  return { sendMsg, isLoading };
 };

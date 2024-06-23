@@ -3,7 +3,7 @@ import { LuSendHorizonal } from "react-icons/lu";
 import { useSendMsg } from "../utils/hooks/useSendMsg";
 const SendMessage = ({ id }) => {
   const [content, setContent] = useState("");
-  const { sendMsg, isLoading, error } = useSendMsg();
+  const { sendMsg, isLoading } = useSendMsg();
   const handleSubmit = async (e) => {
     e.preventDefault();
     await sendMsg(content, id);
