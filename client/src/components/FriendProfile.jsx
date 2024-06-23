@@ -30,7 +30,6 @@ const FriendProfile = () => {
     dispatch(setActiveComponent("chat"));
   };
   const handleAddFriend = async () => {
-    console.log(chat?.selectedChat?.FriendId, "iddd");
     await addFriend(chat?.selectedChat?.FriendId);
   };
   const handleRemoveFriend = async () => {
@@ -44,13 +43,13 @@ const FriendProfile = () => {
   };
 
   return (
-    <div className=" transition-all duration-500 it relative w-full h-full items-center scrollbar-none overflow-y-auto overflow-x-hidden md:border-r border-gray-400">
+    <div className="  relative w-full h-full items-center scrollbar-none overflow-y-auto overflow-x-hidden md:border-l border-gray-400">
       <div className=" flex gap-6  justify-center items-center w-full md:py-3 pt-2.5 pb-1.5 sticky bg-neutral-900 top-0  z-10 ">
         <FaArrowLeft
           onClick={handleArrowClicked}
           className=" w-6 h-6 absolute left-4 text-white cursor-pointer"
         />
-        <p className="text-lg cursor-pointer ">Profile</p>
+        <p className="text-lg  ">Profile</p>
       </div>
       <div className="flex flex-col justify-center items-center pt-8">
         <div className="avatar">

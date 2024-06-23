@@ -74,7 +74,7 @@ const OwnProfile = () => {
               onClick={handleArrowClicked}
               className="w-6 h-6 absolute left-4 text-white cursor-pointer"
             />
-            <p className="text-lg cursor-pointer">Profile</p>
+            <p className="text-lg ">Profile</p>
           </div>
           <div className="flex flex-col justify-center items-center pt-8">
             <div className="relative">
