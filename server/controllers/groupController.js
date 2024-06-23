@@ -1,4 +1,7 @@
-const { uploadImagesToCloudinary } = require("../helpers/cloudinary");
+const {
+  uploadImagesToCloudinary,
+  deleteImage,
+} = require("../helpers/cloudinary");
 const Chat = require("../models/Chat");
 
 exports.createGroupChat = async (req, res) => {
@@ -51,6 +54,8 @@ exports.createGroupChat = async (req, res) => {
 exports.updateGroupProfile = async (req, res) => {
   try {
     const { chatId, chatName } = req.body;
+    const file = req.files?.profilePic;
+    console.log(chatId, chatName, "djjjj");
 
     // Find the group by ID
     let group = await Chat.findById(chatId);
@@ -65,9 +70,17 @@ exports.updateGroupProfile = async (req, res) => {
     // Check if the user is an admin
     const isAdmin = group.groupAdmin.includes(req.user._id);
     if (!isAdmin) {
+      console.log("user,not found");
       return res.status(403).json({
         message: "User trying to update group settings is not an admin",
       });
+    }
+    if (file) {
+      const filepath = await uploadImagesToCloudinary(file, "sky-chat/profile");
+      if (group.profilePic) {
+        await deleteImage(group.profilePic);
+      }
+      group.profilePic = filepath;
     }
 
     // Update the chatName if provided
@@ -168,11 +181,19 @@ exports.addUsers = async (req, res) => {
       return res.status(400).json({ message: "Not a group chat" });
     }
 
-    // Filter out users who are already in the group
-    const newUsers = userIds.filter((userId) => !chat.users.includes(userId));
+    // Find users that are already in the group
+    const existingUsers = userIds.filter((userId) =>
+      chat.users.includes(userId)
+    );
+
+    if (existingUsers.length > 0) {
+      return res.status(400).json({
+        message: `User already in the group`,
+      });
+    }
 
     // Add the new users to the group
-    chat.users.push(...newUsers);
+    chat.users.push(...userIds);
     await chat.save();
 
     res.status(200).json({ message: "Users added to the group", chat });
@@ -214,6 +235,7 @@ exports.removeUser = async (req, res) => {
 };
 exports.makeAdmin = async (req, res) => {
   const { chatId, userId } = req.body;
+
   const requestingUser = req.user._id;
 
   try {
@@ -277,18 +299,34 @@ exports.leaveGroup = async (req, res) => {
 
     // Remove the user from the users array
     chat.users = chat.users.filter(
-      (user) => user.toString() !== requestingUser.toString()
+      (user) => String(user) !== String(requestingUser)
     );
+
+    // Check if the user is the last person in the group
+    if (chat.users.length === 0) {
+      await Chat.deleteOne({ _id: chatId });
+      return res
+        .status(200)
+        .json({ message: "Group deleted as it has no members left" });
+    }
 
     // Remove the user from the groupAdmin array if they are an admin
     chat.groupAdmin = chat.groupAdmin.filter(
-      (admin) => admin.toString() !== requestingUser.toString()
+      (admin) => String(admin) !== String(requestingUser)
     );
 
+    // If the user was an admin and there are no admins left, make the first user in the group an admin
+    if (chat.groupAdmin.length === 0 && chat.users.length > 0) {
+      chat.groupAdmin.push(chat.users[0]);
+      console.log("New Admin Assigned:", chat.users[0]);
+    }
+
     await chat.save();
+    console.log("Chat saved successfully.");
 
     res.status(200).json({ message: "User has left the group", chat });
   } catch (error) {
+    console.error("Server Error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };

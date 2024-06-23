@@ -3,12 +3,12 @@ import { FaEllipsisV } from "react-icons/fa";
 import { fetchWrapper } from "../utils/helpers/functions";
 import { Fetch_Uri } from "../utils/constants";
 import { useDispatch } from "react-redux";
-import { removeUser } from "../../../server/controllers/groupController";
 import { clearBlocked, clearFriends } from "../redux/userRelationsSlice";
 import toast from "react-hot-toast";
 import { setActiveComponent, setSelectedChat } from "../redux/uiSlice";
+import { removeUser } from "../redux/userSlice";
 
-const GroupDropdown = ({ chatId }) => {
+const GroupDropdown = ({ chatId, editProfile, isGroupAdmin }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const dispatch = useDispatch();
@@ -28,13 +28,15 @@ const GroupDropdown = ({ chatId }) => {
       setIsOpen(false);
     }
   };
-  const handleAddNewMembers = () => {};
+  const handleAddNewMembers = () => {
+    dispatch(setActiveComponent("addNewMembers"));
+  };
   const handleLeaveGroup = async () => {
     try {
       const response = await fetchWrapper(`${Fetch_Uri}/api/group/leaveGroup`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(chatId),
+        body: JSON.stringify({ chatId }),
       });
 
       if (response.unauthorized) {
@@ -63,7 +65,7 @@ const GroupDropdown = ({ chatId }) => {
   const toggleDropdown = () => setIsOpen(!isOpen);
 
   return (
-    <div className="relative inline-block text-left" ref={dropdownRef}>
+    <div className="relative inline-block text-left " ref={dropdownRef}>
       <div>
         <button onClick={toggleDropdown} type="button" className="text-center">
           <FaEllipsisV className="text-white h-4" />
@@ -85,6 +87,14 @@ const GroupDropdown = ({ chatId }) => {
             >
               Leave group
             </button>
+            {isGroupAdmin && (
+              <button
+                onClick={editProfile}
+                className="block px-4 py-2 text-sm text-black hover:bg-gray-200 w-full text-left"
+              >
+                Edit profile
+              </button>
+            )}
           </div>
         </div>
       )}
