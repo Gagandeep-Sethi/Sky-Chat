@@ -5,44 +5,75 @@ import { FaArrowLeft } from "react-icons/fa6";
 import Chatting from "./Chatting";
 import SendMessage from "./SendMessage";
 import { setActiveComponent, setProfile } from "../redux/uiSlice";
+import { fetchWrapper } from "../utils/helpers/functions";
+import toast from "react-hot-toast";
+import { removeUser } from "../redux/userSlice";
+import { clearBlocked, clearFriends } from "../redux/userRelationsSlice";
 
 const Conversation = () => {
   const { selectedChat } = useSelector((state) => state.ui);
   const [chat, setChat] = useState([]);
   const dispatch = useDispatch();
+  const { isDarkMode } = useSelector((state) => state.theme);
+
   function handleProfileClick() {
-    dispatch(setProfile("friend"));
+    if (selectedChat.isGroupChat) {
+      dispatch(setProfile("group"));
+    } else {
+      dispatch(setProfile("friend"));
+    }
     dispatch(setActiveComponent("profile"));
   }
   useEffect(() => {
     async function getData() {
-      const response = await fetch(
+      const response = await fetchWrapper(
         `${Fetch_Uri}/api/message/${selectedChat?.FriendId}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
-          credentials: "include", //this will let it set cookie
         }
       );
-      const json = await response.json();
-      console.log(json, "json");
-      setChat(json);
+      if (response.unauthorized) {
+        dispatch(removeUser());
+        dispatch(clearFriends());
+        dispatch(clearBlocked());
+      } else if (response.error) {
+        console.log(response.error, "error json");
+        toast.error(response.error?.message || "An error occurred");
+      } else {
+        console.log(response, "group");
+        setChat(response);
+      }
     }
     if (selectedChat) getData();
-  }, [selectedChat]);
+  }, [selectedChat, dispatch]);
   function handleArrowClicked() {
     dispatch(setActiveComponent("sidebar"));
   }
 
   return (
-    // <div className="h-full w-full bg-[url('./images/bg.png')] bg-cover bg-center">
-    //   <div className="flex flex-col h-full w-full bg-[url('./images/light.png')] bg-cover bg-center  items-center scrollbar-none overflow-y-auto overflow-x-hidden md:border-r border-gray-400">
-    <div className="h-full w-full bg-neutral-900">
-      <div className="flex flex-col h-full w-full  items-center scrollbar-none overflow-y-auto overflow-x-hidden ">
-        <div className="flex gap-6 md:justify-center items-center w-full md:py-3 pt-2.5 pb-1.5 sticky bg-neutral-900 top-0 z-10">
+    <div
+      className={`h-full w-full scrollbar-none overflow-y-auto ${
+        !isDarkMode ? "bg-[url('./images/bg.png')] bg-cover" : "bg-neutral-950"
+      }  bg-center`}
+    >
+      <div
+        className={`flex flex-col h-full w-full ${
+          isDarkMode
+            ? "bg-[url('./images/dark.png')]"
+            : "bg-[url('./images/light.png')]"
+        } bg-contain bg-center  items-center overflow-y-auto overflow-x-hidden md:border-r border-gray-400 shadow-lg`}
+      >
+        <div
+          className={`flex gap-6 md:justify-center items-center w-full md:py-3 pt-2.5 pb-1.5 sticky ${
+            isDarkMode ? "bg-neutral-900  " : "bg-white"
+          } top-0 z-10`}
+        >
           <FaArrowLeft
             onClick={handleArrowClicked}
-            className="lg:hidden w-6 h-6 ml-6"
+            className={`lg:hidden w-6 h-6 ml-6 ${
+              isDarkMode ? "text-white" : "text-black"
+            }`}
           />
 
           <div className="avatar">
@@ -53,12 +84,17 @@ const Conversation = () => {
               />
             </div>
           </div>
-          <p onClick={handleProfileClick} className="text-lg cursor-pointer">
+          <p
+            onClick={handleProfileClick}
+            className={`text-lg cursor-pointer ${
+              isDarkMode ? "text-white" : "text-black"
+            }`}
+          >
             {selectedChat?.username}
           </p>
         </div>
 
-        <div className="flex-1 w-full overflow-y-auto">
+        <div className="flex-1 w-full overflow-y-auto ">
           <Chatting chat={chat} />
         </div>
         <div className="sticky bottom-1 w-full ">

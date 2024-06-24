@@ -4,9 +4,10 @@ import { ChatTime } from "../utils/helpers/functions";
 
 const Chatting = ({ chat }) => {
   const user = useSelector((store) => store?.user);
-  console.log(chat, "chatccc");
+  const ui = useSelector((store) => store?.ui?.activeComponent);
+  const { isDarkMode } = useSelector((state) => state.theme);
   return (
-    <div className="">
+    <div className="overflow-y-auto overflow-x-hidden  scrollbar-none">
       {chat.length > 0 ? (
         <div>
           {chat?.map((msg) => {
@@ -27,15 +28,21 @@ const Chatting = ({ chat }) => {
                     />
                   </div>
                 </div>
-                <div className="chat-header text-xs">
-                  {msg?.senderId?.username}
-                </div>
+                {ui === "group" ? (
+                  <div className="chat-header text-xs">
+                    {msg?.senderId?.username}
+                  </div>
+                ) : null}
                 <div
                   className={`chat-bubble ${
                     msg?.senderId?.username === user?.username
-                      ? "bg-chatBubble1 text-chatMsg1"
-                      : null
-                  } max-w-60 md:max-w-72 break-words overflow-hidden chat-`}
+                      ? isDarkMode
+                        ? "bg-darkchatBubble1 text-darkchatMsg1"
+                        : "bg-lightchatBubble1 text-lightchatMsg1"
+                      : isDarkMode
+                      ? "bg-darkchatBubble2 text-darkchatMsg2"
+                      : "bg-lightchatBubble2 text-lightchatMsg2"
+                  } max-w-60 md:max-w-72 break-words overflow-hidden `}
                 >
                   {msg?.content}
                 </div>
