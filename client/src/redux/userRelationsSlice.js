@@ -41,8 +41,17 @@ const userRelationsSlice = createSlice({
       state.blocked = action.payload;
       saveToLocalStorage("blocked", state.blocked);
     },
+    clearFriends: (state) => {
+      state.friends = [];
+      saveToLocalStorage("friends", state.friends);
+    },
+    clearBlocked: (state) => {
+      state.blocked = [];
+      saveToLocalStorage("blocked", state.blocked);
+    },
   },
 });
 
-export const { setFriends, setBlocked } = userRelationsSlice.actions;
+export const { setFriends, setBlocked, clearFriends, clearBlocked } =
+  userRelationsSlice.actions;
 export default userRelationsSlice.reducer;
