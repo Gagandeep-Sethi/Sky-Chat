@@ -16,6 +16,7 @@ const GroupProfile = () => {
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const { FriendId } = useSelector((state) => state?.ui?.selectedChat);
+  const { isDarkMode } = useSelector((state) => state.theme);
 
   useEffect(() => {
     const getGroupData = async () => {
@@ -74,12 +75,24 @@ const GroupProfile = () => {
     <div className="h-full w-full">
       {step === 1 && (
         <div className="transition-all duration-500 relative w-full h-full items-center scrollbar-none overflow-y-auto overflow-x-hidden md:border-l border-gray-400">
-          <div className="flex gap-6 justify-center items-center w-full md:py-3 pt-2.5 pb-1.5 sticky bg-neutral-900 top-0 z-10">
+          <div
+            className={`flex gap-6 md:justify-center items-center w-full md:py-3 pt-2.5 pb-1.5 sticky shadow-lg ${
+              isDarkMode ? "bg-neutral-900  " : "bg-white"
+            } top-0 z-10`}
+          >
             <FaArrowLeft
               onClick={handleArrowClicked}
-              className="w-6 h-6 absolute left-4 text-white cursor-pointer"
+              className={`w-6 h-6 absolute left-4 ${
+                isDarkMode ? "text-white" : "text-black"
+              }  cursor-pointer`}
             />
-            <p className="text-lg ">Group Profile</p>
+            <p
+              className={`text-lg ${
+                isDarkMode ? "text-darkText1" : "text-lightText1"
+              } `}
+            >
+              Group Profile
+            </p>
             <div className="absolute right-2">
               <GroupDropdown
                 chatId={FriendId}
@@ -97,7 +110,11 @@ const GroupProfile = () => {
                   className="w-full h-full object-center object-cover"
                 />
               </div>
-              <p className="text-lg text-center text-white font-extralight py-3">
+              <p
+                className={`text-lg text-center ${
+                  isDarkMode ? "text-darkText1" : "text-lightText1"
+                } font-extralight py-3`}
+              >
                 {group?.chatName}
               </p>
             </div>
@@ -113,7 +130,13 @@ const GroupProfile = () => {
                       alt=""
                       className="w-10 h-10 rounded-full object-center object-cover"
                     />
-                    <p className="text-white">{member.username}</p>
+                    <p
+                      className={`  ${
+                        isDarkMode ? "text-darkText1" : "text-lightText1"
+                      }`}
+                    >
+                      {member.username}
+                    </p>
                   </div>
                   <div className="flex items-center gap-2 ">
                     {isAdmin(member._id) && (
