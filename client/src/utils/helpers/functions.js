@@ -28,7 +28,6 @@ export const ChatTime = (chatTime) => {
 };
 
 export const fetchWrapper = async (url, options = {}) => {
-  console.log(options, "options");
   try {
     const response = await fetch(url, {
       ...options,
