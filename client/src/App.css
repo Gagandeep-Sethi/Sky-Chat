@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.transition-transform {
+  transition: transform 0.3s ease-out, width 0.3s ease-out;
+}
+.hidden-addFriend {
+  transform: translateX(-100%);
+  width: 0;
+  overflow: hidden;
+}
+.hidden-chat {
+  transform: translateX(400%);
+  width: 0;
+  overflow: hidden;
+}
+.hidden-profile {
+  transform: translateX(-100%);
+  width: 0;
+  overflow: hidden;
+}
