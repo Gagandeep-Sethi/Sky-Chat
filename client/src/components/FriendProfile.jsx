@@ -98,8 +98,8 @@ const FriendProfile = () => {
         >
           {profileDetails?.username}
         </p>
-        <div>
-          <div className="flex justify-center">
+        <div className="space-y-3">
+          <div className="flex justify-center ">
             {!isFriend ? (
               <button
                 disabled={isLoadingAdd}
