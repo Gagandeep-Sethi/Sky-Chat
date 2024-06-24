@@ -1,33 +1,38 @@
 const Chat = require("../models/Chat");
 const Message = require("../models/Message");
+const User = require("../models/User");
 
 exports.sendMessage = async (req, res) => {
   try {
-    const { content, chatId } = req.body;
+    const { content } = req.body;
     const senderId = req.user._id;
-    const { id: receiverId } = req.params;
+    const { id } = req.params; // Use the same parameter for userToChatWithId and chatId
 
     let chat;
 
-    if (chatId) {
-      // Group chat
-      chat = await Chat.findById(chatId);
-      if (!chat) {
-        return res.status(404).json({ message: "Chat not found" });
-      }
-    } else if (receiverId) {
+    // Check if the ID corresponds to a user first
+    const userToChatWith = await User.findById(id);
+
+    if (userToChatWith) {
       // One-on-one chat
       chat = await Chat.findOne({
-        users: { $all: [senderId, receiverId] },
+        isGroupChat: false,
+        users: { $all: [senderId, id] },
       });
+
       if (!chat) {
+        // Create a new one-on-one chat if it doesn't exist
         chat = await Chat.create({
-          users: [senderId, receiverId],
+          users: [senderId, id],
         });
       }
     } else {
-      // Neither chatId nor receiverId provided
-      return res.status(400).json({ message: "Invalid request parameters" });
+      // If not a user, assume it's a chat ID for group chat
+      chat = await Chat.findById(id);
+
+      if (!chat) {
+        return res.status(404).json({ message: "Chat not found" });
+      }
     }
 
     const newMessage = new Message({
@@ -47,35 +52,35 @@ exports.sendMessage = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 exports.getChat = async (req, res) => {
   try {
-    const { id: userToChatWithId } = req.params;
+    const { id } = req.params; // Use the same parameter for userToChatWithId and chatId
     const senderId = req.user._id;
-    const { chatId } = req.body;
 
     let chat;
 
-    if (chatId) {
-      // Group chat
-      chat = await Chat.findById(chatId);
-    } else if (userToChatWithId) {
+    // Check if the ID corresponds to a user first
+    const userToChatWith = await User.findById(id);
+
+    if (userToChatWith) {
       // One-on-one chat
       chat = await Chat.findOne({
         isGroupChat: false,
-        users: { $all: [senderId, userToChatWithId] },
+        users: { $all: [senderId, id] },
       });
     } else {
-      // Neither chatId nor userToChatWithId provided
-      return res.status(400).json({ message: "Invalid request parameters" });
+      // If not a user, assume it's a chat ID for group chat
+      chat = await Chat.findById(id);
     }
 
     if (!chat) return res.status(200).json([]);
 
-    // Fetch messages for the chat and populate senderId with only username field
+    // Fetch messages for the chat and populate senderId with username and profilePic fields
     const messages = await Message.find({ chatId: chat._id })
       .select("-chatId")
-      .populate("senderId", "username") // Populate only the username field from User model
-      .sort("createdAt") // Sort messages by creation time
+      .populate("senderId", "username profilePic")
+      .sort("createdAt")
       .exec();
 
     return res.status(200).json(messages);
