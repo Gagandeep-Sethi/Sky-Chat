@@ -32,7 +32,7 @@ app.use(fileUpload());
 // };
 //app.use(cors());
 const corsOptions = {
-  origin: "https://sky-chat-chi.vercel.app", // Allow all origins
+  origin: ["https://sky-chat-chi.vercel.app", "http://localhost:3000"], // Allow all origins
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Allow these HTTP methods
   allowedHeaders: "Content-Type,Authorization", // Allow these headers
   credentials: true, // Allow cookies to be sent
@@ -49,7 +49,9 @@ db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
   console.log("Connected to MongoDB");
 });
-
+app.get("/", (req, res) => {
+  res.send("hi");
+});
 app.use("/api/auth", authRouter);
 app.use("/api/message", messageRouter);
 app.use("/api/group", groupRouter);
