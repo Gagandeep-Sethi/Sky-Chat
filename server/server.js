@@ -40,7 +40,7 @@ const corsOptions = {
 app.use(cors(corsOptions)); // Enable CORS with options
 
 //const passport = require("passport");
-require("./config/passport");
+//require("./config/passport");
 mongoose.connect(process.env.MONGODB_URI);
 
 const db = mongoose.connection;
