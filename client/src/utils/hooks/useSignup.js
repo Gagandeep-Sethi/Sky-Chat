@@ -26,6 +26,7 @@ export const useSignup = (formValue) => {
     if (response.ok) {
       console.log(json, "json");
       setIsLoading(false);
+      setError(json.message);
     }
   };
   return { signup, isLoading, error };

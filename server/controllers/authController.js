@@ -31,12 +31,11 @@ exports.login = async (req, res) => {
     let friends = [];
     let blocked = [];
     if (friendsList) {
-      console.log("list found");
       friends = friendsList?.friends;
       blocked = friendsList?.blocked;
     }
     res.status(200).json({
-      email,
+      email: user.email,
       username: user.username,
       profilePic: user?.profilePic,
       friends,
