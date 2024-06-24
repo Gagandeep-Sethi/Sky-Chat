@@ -18,6 +18,7 @@ const OwnProfile = () => {
   const [showChangePassword, setShowChangePassword] = useState(false); // State to toggle ChangePassword component
   const chat = useSelector((store) => store?.ui);
   const user = useSelector((store) => store?.user);
+  const { isDarkMode } = useSelector((state) => state.theme);
   const dispatch = useDispatch();
   const { update, isLoading } = useUpdateProfile();
 
@@ -69,12 +70,24 @@ const OwnProfile = () => {
         <ChangePassword onBack={handleBackFromChangePassword} />
       ) : (
         <>
-          <div className="flex gap-6 justify-center items-center w-full md:py-3 pt-2.5 pb-1.5 sticky bg-neutral-900 top-0 z-10">
+          <div
+            className={`flex gap-6 md:justify-center items-center w-full md:py-3 pt-2.5 pb-1.5 sticky shadow-lg ${
+              isDarkMode ? "bg-neutral-900  " : "bg-white"
+            } top-0 z-10`}
+          >
             <FaArrowLeft
               onClick={handleArrowClicked}
-              className="w-6 h-6 absolute left-4 text-white cursor-pointer"
+              className={`w-6 h-6 absolute left-4 ${
+                isDarkMode ? "text-white" : "text-black"
+              }  cursor-pointer`}
             />
-            <p className="text-lg ">Profile</p>
+            <p
+              className={`text-lg ${
+                isDarkMode ? "text-darkText1" : "text-lightText1"
+              }`}
+            >
+              Profile
+            </p>
           </div>
           <div className="flex flex-col justify-center items-center pt-8">
             <div className="relative">
@@ -99,7 +112,11 @@ const OwnProfile = () => {
                 />
               </label>
             </div>
-            <p className="text-lg font-extralight py-3">
+            <p
+              className={`text-lg ${
+                isDarkMode ? "text-white" : "text-black"
+              } font-extralight py-3`}
+            >
               {profileDetails?.email}
             </p>
             <div className="relative my-3">
@@ -109,13 +126,19 @@ const OwnProfile = () => {
                 value={profileDetails?.username}
                 onChange={handleNameChange}
                 id="username"
-                className="peer text-white md:w-64 w-52 font-light text bg-neutral-900 border-b border-green-500 py-2 placeholder-transparent placeholder-shown:border-gray-500 focus:border-green-500 focus:outline-none"
+                className={`peer  md:w-64 w-52 font-light text ${
+                  isDarkMode
+                    ? "bg-darkBg text-darkText1"
+                    : "bg-lightBg text-lightText1"
+                } border-b border-green-500 py-2 placeholder-transparent placeholder-shown:border-gray-500 focus:border-green-500 focus:outline-none`}
                 type="text"
                 placeholder="enter your name"
               />
               <label
                 htmlFor="username"
-                className="absolute left-0 top-1.5 cursor-text font-extralight text-sm text-white transition-all duration-[250ms] peer-valid:-top-3 peer-valid:text-sm peer-valid:text-green-500 peer-focus:-top-3 peer-focus:text-sm peer-focus:text-green-500"
+                className={`absolute left-0 top-1.5 cursor-text font-extralight text-sm ${
+                  isDarkMode ? "text-darkText1" : "text-lightText1"
+                }  transition-all duration-[250ms] peer-valid:-top-3 peer-valid:text-sm peer-valid:text-green-500 peer-focus:-top-3 peer-focus:text-sm peer-focus:text-green-500`}
               >
                 Update username
               </label>

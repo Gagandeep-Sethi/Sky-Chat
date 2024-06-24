@@ -18,6 +18,8 @@ const FriendProfile = () => {
   const { remove, isLoadingRemove } = useRemoveFriend();
   const { block, isLoadingBlock } = useBlockFriend();
   const { UnBlock, isLoadingUnBlock } = useUnBlockFriend();
+  const { isDarkMode } = useSelector((state) => state.theme);
+
   useEffect(() => {
     if (chat?.profile === "friend") {
       return setProfileDetails({
@@ -44,12 +46,24 @@ const FriendProfile = () => {
 
   return (
     <div className="  relative w-full h-full items-center scrollbar-none overflow-y-auto overflow-x-hidden md:border-l border-gray-400">
-      <div className=" flex gap-6  justify-center items-center w-full md:py-3 pt-2.5 pb-1.5 sticky bg-neutral-900 top-0  z-10 ">
+      <div
+        className={`flex gap-6 md:justify-center items-center w-full md:py-3 pt-2.5 pb-1.5 sticky shadow-lg ${
+          isDarkMode ? "bg-neutral-900  " : "bg-white"
+        } top-0 z-10`}
+      >
         <FaArrowLeft
           onClick={handleArrowClicked}
-          className=" w-6 h-6 absolute left-4 text-white cursor-pointer"
+          className={`w-6 h-6 absolute left-4 ${
+            isDarkMode ? "text-white" : "text-black"
+          }  cursor-pointer`}
         />
-        <p className="text-lg  ">Profile</p>
+        <p
+          className={`text-lg ${
+            isDarkMode ? "text-darkText1" : "text-lightText1"
+          } `}
+        >
+          Profile
+        </p>
       </div>
       <div className="flex flex-col justify-center items-center pt-8">
         <div className="avatar">
@@ -60,7 +74,13 @@ const FriendProfile = () => {
             />
           </div>
         </div>
-        <p className="text-xl py-3">{profileDetails?.username}</p>
+        <p
+          className={`text-lg ${
+            isDarkMode ? "text-white" : "text-black"
+          } font-extralight py-3`}
+        >
+          {profileDetails?.username}
+        </p>
         <div>
           <div>
             <button
