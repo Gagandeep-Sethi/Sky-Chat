@@ -38,7 +38,7 @@ const AddDropdown = () => {
 
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
-      <button
+      <label
         onClick={toggleDropdown}
         className="inline-flex transition-all duration-500 justify-center rounded-full w-full p-2 bg-green-500 "
       >
@@ -47,7 +47,7 @@ const AddDropdown = () => {
         ) : (
           <LuPlusCircle className="w-7 h-7 text-black" />
         )}
-      </button>
+      </label>
       {isOpen && (
         <div className="absolute right-9 z-10 mb-2 w-48 bottom-6 bg-white border border-gray-300 rounded-md shadow-lg">
           <div
@@ -87,3 +87,11 @@ const AddDropdown = () => {
 };
 
 export default AddDropdown;
+
+// {/* <button onClick={toggleDropdown}>
+//         <label className=" swap swap-rotate text-black  btn-circle bg-green-500 ">
+//           <input type="checkbox" />
+//           <LuPlusCircle className="w-7 h-7 swap-off" />
+//           <RxCross2 className="w-7 h-7 swap-on" />
+//         </label>
+//       </button> */}
