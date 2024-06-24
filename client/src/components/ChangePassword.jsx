@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import { useChangePassword } from "../utils/hooks/useChangePassword";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { useSelector } from "react-redux";
 
 const ChangePassword = ({ onBack }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,6 +13,7 @@ const ChangePassword = ({ onBack }) => {
   });
 
   const { changePassword, isLoading, error } = useChangePassword();
+  const { isDarkMode } = useSelector((state) => state.theme);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -31,12 +33,24 @@ const ChangePassword = ({ onBack }) => {
 
   return (
     <div className="transition-all duration-500 relative w-full h-full items-center scrollbar-none overflow-y-auto overflow-x-hidden md:border-l border-gray-400">
-      <div className="flex gap-6 justify-center items-center w-full md:py-3 pt-2.5 pb-1.5 sticky bg-neutral-900 top-0 z-10">
+      <div
+        className={`flex gap-6 md:justify-center items-center w-full md:py-3 pt-2.5 pb-1.5 sticky shadow-lg ${
+          isDarkMode ? "bg-darkBg  " : "bg-lightBg"
+        } top-0 z-10`}
+      >
         <FaArrowLeft
           onClick={onBack}
-          className="w-6 h-6 absolute left-4 text-white cursor-pointer"
+          className={`w-6 h-6 absolute left-4 ${
+            isDarkMode ? "text-darkText1" : "text-lightText1"
+          }  cursor-pointer`}
         />
-        <p className="text-lg cursor-pointer">Change Password</p>
+        <p
+          className={`text-lg ${
+            isDarkMode ? "text-darkText1" : "text-lightText1"
+          }`}
+        >
+          Change Password
+        </p>
       </div>
       <form
         onSubmit={handleSubmit}
@@ -49,13 +63,19 @@ const ChangePassword = ({ onBack }) => {
             value={formValue?.currentPassword}
             onChange={handleChange}
             id="currentPassword"
-            className="peer text-white md:w-64 w-52 font-light text bg-neutral-900 border-b border-green-500 py-2 placeholder-transparent placeholder-shown:border-gray-500 focus:border-green-500 focus:outline-none"
+            className={`peer  md:w-64 w-52 font-light text ${
+              isDarkMode
+                ? "bg-darkBg text-darkText1"
+                : "bg-lightBg text-lightText1"
+            } border-b border-green-500 py-2 placeholder-transparent placeholder-shown:border-gray-500 focus:border-green-500 focus:outline-none`}
             type="password"
             placeholder="Enter current password"
           />
           <label
             htmlFor="currentPassword"
-            className="absolute left-0 top-1.5 cursor-text font-extralight text-sm text-white transition-all duration-[250ms] peer-valid:-top-3 peer-valid:text-sm peer-valid:text-green-500 peer-focus:-top-3 peer-focus:text-sm peer-focus:text-green-500"
+            className={`absolute left-0 top-1.5 cursor-text font-extralight text-sm ${
+              isDarkMode ? "text-darkText1" : "text-lightText1"
+            }  transition-all duration-[250ms] peer-valid:-top-3 peer-valid:text-sm peer-valid:text-green-500 peer-focus:-top-3 peer-focus:text-sm peer-focus:text-green-500`}
           >
             Current Password
           </label>
@@ -67,7 +87,11 @@ const ChangePassword = ({ onBack }) => {
             value={formValue?.newPassword}
             onChange={handleChange}
             id="newPassword"
-            className="peer text-white md:w-64 w-52 font-light text bg-neutral-900 border-b border-green-500 py-2 placeholder-transparent placeholder-shown:border-gray-500 focus:border-green-500 focus:outline-none"
+            className={`peer  md:w-64 w-52 font-light text ${
+              isDarkMode
+                ? "bg-darkBg text-darkText1"
+                : "bg-lightBg text-lightText1"
+            } border-b border-green-500 py-2 placeholder-transparent placeholder-shown:border-gray-500 focus:border-green-500 focus:outline-none`}
             type={showPassword ? "text" : "password"}
             placeholder="Enter new password"
           />
@@ -88,7 +112,9 @@ const ChangePassword = ({ onBack }) => {
           </button>
           <label
             htmlFor="newPassword"
-            className="absolute left-0 top-1.5 cursor-text font-extralight text-sm text-white transition-all duration-[250ms] peer-valid:-top-3 peer-valid:text-sm peer-valid:text-green-500 peer-focus:-top-3 peer-focus:text-sm peer-focus:text-green-500"
+            className={`absolute left-0 top-1.5 cursor-text font-extralight text-sm ${
+              isDarkMode ? "text-darkText1" : "text-lightText1"
+            }  transition-all duration-[250ms] peer-valid:-top-3 peer-valid:text-sm peer-valid:text-green-500 peer-focus:-top-3 peer-focus:text-sm peer-focus:text-green-500`}
           >
             New Password
           </label>
@@ -100,13 +126,19 @@ const ChangePassword = ({ onBack }) => {
             value={formValue?.confirmPassword}
             onChange={handleChange}
             id="confirmPassword"
-            className="peer text-white md:w-64 w-52 font-light text bg-neutral-900 border-b border-green-500 py-2 placeholder-transparent placeholder-shown:border-gray-500 focus:border-green-500 focus:outline-none"
+            className={`peer  md:w-64 w-52 font-light text ${
+              isDarkMode
+                ? "bg-darkBg text-darkText1"
+                : "bg-lightBg text-lightText1"
+            } border-b border-green-500 py-2 placeholder-transparent placeholder-shown:border-gray-500 focus:border-green-500 focus:outline-none`}
             type="password"
             placeholder="Confirm new password"
           />
           <label
             htmlFor="confirmPassword"
-            className="absolute left-0 top-1.5 cursor-text font-extralight text-sm text-white transition-all duration-[250ms] peer-valid:-top-3 peer-valid:text-sm peer-valid:text-green-500 peer-focus:-top-3 peer-focus:text-sm peer-focus:text-green-500"
+            className={`absolute left-0 top-1.5 cursor-text font-extralight text-sm ${
+              isDarkMode ? "text-darkText1" : "text-lightText1"
+            }  transition-all duration-[250ms] peer-valid:-top-3 peer-valid:text-sm peer-valid:text-green-500 peer-focus:-top-3 peer-focus:text-sm peer-focus:text-green-500`}
           >
             Confirm New Password
           </label>
