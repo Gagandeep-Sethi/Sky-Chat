@@ -4,13 +4,13 @@ const messageRouter = require("./routes/messageRoute");
 const groupRouter = require("./routes/groupRoute");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
-const googleRouter = require("./routes/googleRoute");
+//const googleRouter = require("./routes/googleRoute");
 const userRouter = require("./routes/userRoute");
 const fileUpload = require("express-fileupload");
 const cors = require("cors");
-
+const { app, server } = require("./socket/socket");
 require("dotenv").config();
-const app = express();
+//const app = express();
 
 // Require for JSON conversion of content in body
 app.use(express.json());
@@ -34,7 +34,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions)); // Enable CORS with options
 
-const passport = require("passport");
+//const passport = require("passport");
 require("./config/passport");
 mongoose.connect(process.env.MONGODB_URI);
 
@@ -46,25 +46,25 @@ db.once("open", () => {
 });
 
 app.use("/api/auth", authRouter);
-app.use("/auth/google", googleRouter);
+//app.use("/auth/google", googleRouter);
 app.use("/api/message", messageRouter);
 app.use("/api/group", groupRouter);
 app.use("/api/user", userRouter);
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET,HEAD,OPTIONS,POST,PUT,DELETE"
-  );
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  next();
-});
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", req.headers.origin);
+//   res.header("Access-Control-Allow-Credentials", "true");
+//   res.header(
+//     "Access-Control-Allow-Methods",
+//     "GET,HEAD,OPTIONS,POST,PUT,DELETE"
+//   );
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+//   );
+//   next();
+// });
 
-app.listen(process.env.PORT, () =>
+server.listen(process.env.PORT, () =>
   console.log(`server listening at port ${process.env.PORT}`)
 );
