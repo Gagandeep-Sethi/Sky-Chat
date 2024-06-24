@@ -1,19 +1,16 @@
 import React from "react";
 import { useAddFriend } from "../utils/hooks/useAddFriend";
-import { useRemoveFriend } from "../utils/hooks/useRemoveFriend";
 import { useSelector } from "react-redux";
 
 const SearchedUsers = ({ results }) => {
   const { addFriend, isLoadingAdd } = useAddFriend();
-  const { remove, isLoadingRemove } = useRemoveFriend();
+
   const { isDarkMode } = useSelector((state) => state.theme);
 
   const handleAddFriend = async (id) => {
     await addFriend(id);
   };
-  const handleRemoveFriend = async (id) => {
-    await remove(id);
-  };
+
   return (
     <div className="w-full h-full overflow-y-auto">
       {results.map((res, i) => {
@@ -37,7 +34,7 @@ const SearchedUsers = ({ results }) => {
               <div>
                 <p
                   className={`text-lg ${
-                    isDarkMode ? "text-darkText1" : "text-lightText1"
+                    isDarkMode ? "text-darkText1" : "text-darkText1"
                   }`}
                 >
                   {res?.username}
@@ -49,13 +46,6 @@ const SearchedUsers = ({ results }) => {
                     className="px-3 py-1 rounded-xl bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg"
                   >
                     Add Friend
-                  </button>
-                  <button
-                    disabled={isLoadingRemove}
-                    onClick={() => handleRemoveFriend(res?._id)}
-                    className="px-3 py-1 rounded-xl bg-cyan-500 hover:bg-cyan-600 text-white shadow-lg"
-                  >
-                    Unfriend
                   </button>
                 </div>
               </div>
