@@ -4,7 +4,6 @@ const messageRouter = require("./routes/messageRoute");
 const groupRouter = require("./routes/groupRoute");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
-//const googleRouter = require("./routes/googleRoute");
 const userRouter = require("./routes/userRoute");
 const fileUpload = require("express-fileupload");
 const cors = require("cors");
@@ -20,18 +19,24 @@ app.use(cookieParser());
 // Required to handle file upload and remove the need to convert image to buffer manually
 app.use(fileUpload());
 
-const whitelist = ["http://localhost:3000"];
+// const whitelist = ["http://localhost:3000"];
+// const corsOptions = {
+//   origin: function (origin, callback) {
+//     if (whitelist.indexOf(origin) !== -1 || !origin) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error("Not allowed by CORS"));
+//     }
+//   },
+//   credentials: true, // Helps to set credentials cookie mainly
+// };
+//app.use(cors());
 const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true, // Helps to set credentials cookie mainly
+  origin: "*", // Allow all origins
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Allow these HTTP methods
+  allowedHeaders: "Content-Type,Authorization", // Allow these headers
+  credentials: true, // Allow cookies to be sent
 };
-
 app.use(cors(corsOptions)); // Enable CORS with options
 
 //const passport = require("passport");
@@ -46,7 +51,6 @@ db.once("open", () => {
 });
 
 app.use("/api/auth", authRouter);
-//app.use("/auth/google", googleRouter);
 app.use("/api/message", messageRouter);
 app.use("/api/group", groupRouter);
 app.use("/api/user", userRouter);
