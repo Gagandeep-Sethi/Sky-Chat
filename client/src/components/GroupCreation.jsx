@@ -5,6 +5,7 @@ import { TbCameraPlus } from "react-icons/tb";
 import { fetchWrapper } from "../utils/helpers/functions";
 import toast from "react-hot-toast";
 import { useLogout } from "../utils/hooks/useLogout";
+import { useSelector } from "react-redux";
 
 const GroupCreation = ({ selectedUsers, onBack }) => {
   const [groupName, setGroupName] = useState("");
@@ -12,6 +13,7 @@ const GroupCreation = ({ selectedUsers, onBack }) => {
   const [previewPic, setPreviewPic] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { logout } = useLogout();
+  const { isDarkMode } = useSelector((state) => state.theme);
 
   const handleCreateGroup = async () => {
     setIsLoading(true);
@@ -53,7 +55,9 @@ const GroupCreation = ({ selectedUsers, onBack }) => {
     <div className="w-full relative h-full pt-8">
       <FaArrowLeft
         onClick={onBack}
-        className=" w-6 h-6 absolute left-8    text-white cursor-pointer"
+        className={`w-6 h-6 absolute left-8    ${
+          isDarkMode ? "text-darkText1" : "text-lightText1"
+        } cursor-pointer`}
       />
       <div className="flex w-full h-full  flex-col justify-center items-center">
         <div className="relative">
@@ -88,13 +92,19 @@ const GroupCreation = ({ selectedUsers, onBack }) => {
             value={groupName}
             onChange={(e) => setGroupName(e.target.value)}
             id="groupName"
-            className="peer text-white md:w-64 w-52 font-light text bg-neutral-900 border-b border-green-500 py-2 placeholder-transparent placeholder-shown:border-gray-500 focus:border-green-500 focus:outline-none"
+            className={`peer  md:w-64 w-52 font-light text ${
+              isDarkMode
+                ? "bg-darkBg text-darkText1"
+                : "bg-lightBg text-lightText1"
+            } border-b border-green-500 py-2 placeholder-transparent placeholder-shown:border-gray-500 focus:border-green-500 focus:outline-none`}
             type="text"
             placeholder="Enter group name"
           />
           <label
             htmlFor="groupName"
-            className="absolute left-0 top-1.5 cursor-text font-extralight text-sm text-white transition-all duration-[250ms] peer-valid:-top-3 peer-valid:text-sm peer-valid:text-green-500 peer-focus:-top-3 peer-focus:text-sm peer-focus:text-green-500"
+            className={`absolute left-0 top-1.5 cursor-text font-extralight text-sm ${
+              isDarkMode ? "text-darkText1" : "text-lightText1"
+            }  transition-all duration-[250ms] peer-valid:-top-3 peer-valid:text-sm peer-valid:text-green-500 peer-focus:-top-3 peer-focus:text-sm peer-focus:text-green-500`}
           >
             Group name
           </label>
