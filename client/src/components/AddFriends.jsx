@@ -66,7 +66,7 @@ const AddFriends = () => {
       } h-full`}
     >
       <div
-        className={`flex gap-6 md:justify-center items-center w-full md:py-3 pt-2.5 pb-1.5 sticky shadow-lg ${
+        className={`flex gap-6 justify-center items-center w-full md:py-3 pt-2.5 pb-1.5 sticky shadow-lg ${
           isDarkMode ? "bg-darkBg" : "bg-lightBg"
         } top-0 z-10`}
       >
@@ -77,7 +77,7 @@ const AddFriends = () => {
           } cursor-pointer`}
         />
         <p
-          className={`text-lg ${
+          className={`text-lg text-center ${
             isDarkMode ? "text-darkText1" : "text-lightText1"
           }`}
         >
