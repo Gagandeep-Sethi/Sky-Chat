@@ -196,28 +196,29 @@ const UserSelection = ({ onProceed }) => {
       )}
 
       <div className="m-4">
-        {filteredUsers.map((user) => (
-          <div
-            key={user.friendId}
-            className="flex items-center justify-between p-2 border border-gray-300 rounded-xl mb-2 cursor-pointer hover:bg-gray-400"
-            onClick={() => handleSelectUser(user)}
-          >
-            <div className="flex items-center">
-              <img
-                src={`https://res.cloudinary.com/dyja4tbmu/${user?.profilePic}.jpg`}
-                alt={user.username}
-                className="w-10 h-10 rounded-full"
-              />
-              <span
-                className={`ml-2 ${
-                  isDarkMode ? "text-darkText1" : "text-lightText1"
-                }`}
-              >
-                {user.username}
-              </span>
+        {filteredUsers.length > 0 &&
+          filteredUsers.map((user) => (
+            <div
+              key={user.friendId}
+              className="flex items-center justify-between p-2 border border-gray-300 rounded-xl mb-2 cursor-pointer hover:bg-gray-400"
+              onClick={() => handleSelectUser(user)}
+            >
+              <div className="flex items-center">
+                <img
+                  src={`https://res.cloudinary.com/dyja4tbmu/${user?.profilePic}.jpg`}
+                  alt={user.username}
+                  className="w-10 h-10 rounded-full"
+                />
+                <span
+                  className={`ml-2 ${
+                    isDarkMode ? "text-darkText1" : "text-lightText1"
+                  }`}
+                >
+                  {user.username}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
       <button
         disabled={selectedUsers.length < 1}
