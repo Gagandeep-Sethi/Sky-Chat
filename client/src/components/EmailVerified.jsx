@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Fetch_Uri } from "../utils/constants";
 
 const EmailVerification = () => {
   const [verificationStatus, setVerificationStatus] = useState(null);
@@ -20,7 +21,7 @@ const EmailVerification = () => {
     const verifyEmail = async () => {
       try {
         const response = await fetch(
-          `/api/auth/verify?token=${token}&action=${action}`
+          `${Fetch_Uri}/api/auth/verify?token=${token}&action=${action}`
         );
         const data = await response.json();
 
@@ -42,11 +43,10 @@ const EmailVerification = () => {
           setVerificationStatus("error");
         }
       } catch (error) {
-        setMessage("Error verifying user. Please try again later.");
+        setMessage("Error verifying email. Please try again later.");
         setVerificationStatus("error");
       }
     };
-
     verifyEmail();
   }, [location.search]);
 
@@ -61,14 +61,14 @@ const EmailVerification = () => {
             Thank you for verifying your email.
           </p>
           <Link to="/login">
-            <button className="btn text-white">Login</button>
+            <button className="btn bg-black text-white">Login</button>
           </Link>
         </>
       ) : (
         <div className="h-full w-full flex flex-col items-center justify-center">
           <p className="text-3xl text-black mb-12 text-center">{message}</p>
           <Link to="/login">
-            <button className="btn text-white">Login</button>
+            <button className="btn bg-black text-white">Login</button>
           </Link>
         </div>
       )}

@@ -142,12 +142,12 @@ const Signup = () => {
                     Confirm Password
                     <span className="text-red-600 ">*</span>
                   </label>
-                  {error && (
-                    <p className="text-red-600 mt-3 text-center text-sm  animate-bounce">
-                      {error} !!
-                    </p>
-                  )}
                 </div>
+                {error && (
+                  <p className="text-red-600 mt-3 text-center text-sm  animate-bounce">
+                    {error} !!
+                  </p>
+                )}
 
                 <button
                   disabled={isLoading}

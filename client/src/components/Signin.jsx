@@ -102,12 +102,12 @@ const Signin = () => {
                     Password
                     <span className="text-red-600 ">*</span>
                   </label>
-                  {error && (
-                    <p className="text-red-600  text-center mt-3  text-sm  animate-bounce">
-                      {error} !!
-                    </p>
-                  )}
                 </div>
+                {error && (
+                  <p className="text-red-600  text-center mt-3  text-sm  animate-bounce">
+                    {error} !!
+                  </p>
+                )}
 
                 <button
                   disabled={isLoading}
