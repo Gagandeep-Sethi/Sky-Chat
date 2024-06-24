@@ -7,6 +7,7 @@ const SendMessage = ({ id }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await sendMsg(content, id);
+    setContent("");
   };
   const handleChange = (e) => {
     setContent(e.target.value);
