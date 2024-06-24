@@ -2,15 +2,17 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaEllipsisV } from "react-icons/fa";
 import { fetchWrapper } from "../utils/helpers/functions";
 import { Fetch_Uri } from "../utils/constants";
-import { useDispatch } from "react-redux";
-import { removeUser } from "../../../server/controllers/groupController";
+import { useDispatch, useSelector } from "react-redux";
 import { clearBlocked, clearFriends } from "../redux/userRelationsSlice";
 import toast from "react-hot-toast";
+import { removeUser } from "../redux/userSlice";
 
 const MemberDropdown = ({ userId, chatId }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const dispatch = useDispatch();
+  const { isDarkMode } = useSelector((state) => state.theme);
+
   useEffect(() => {
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
@@ -32,7 +34,7 @@ const MemberDropdown = ({ userId, chatId }) => {
       const response = await fetchWrapper(`${Fetch_Uri}/api/group/makeAdmin`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(chatId, userId),
+        body: JSON.stringify({ chatId, userId }),
       });
 
       if (response.unauthorized) {
@@ -53,7 +55,7 @@ const MemberDropdown = ({ userId, chatId }) => {
       const response = await fetchWrapper(`${Fetch_Uri}/api/group/removeUser`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(chatId, userId),
+        body: JSON.stringify({ chatId, userId }),
       });
 
       if (response.unauthorized) {
@@ -76,7 +78,11 @@ const MemberDropdown = ({ userId, chatId }) => {
     <div className="relative inline-block text-left" ref={dropdownRef}>
       <div>
         <button onClick={toggleDropdown} type="button" className="text-center">
-          <FaEllipsisV className="text-white h-4" />
+          <FaEllipsisV
+            className={`${
+              isDarkMode ? "text-darkText1" : "text-lightText1"
+            } h-4`}
+          />
         </button>
       </div>
 
