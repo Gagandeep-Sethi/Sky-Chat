@@ -11,6 +11,7 @@ const FriendList = () => {
   const [list, setList] = useState([]);
   const dispatch = useDispatch();
   const { isDarkMode } = useSelector((state) => state.theme);
+  const { friends } = useSelector((store) => store?.userRelations);
 
   useEffect(() => {
     async function getData() {
@@ -36,7 +37,7 @@ const FriendList = () => {
       } catch (error) {}
     }
     getData();
-  }, [dispatch]);
+  }, [dispatch, friends]);
   return (
     <div className="relative h-full">
       {list.length > 0 ? (
