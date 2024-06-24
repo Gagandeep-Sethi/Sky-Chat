@@ -5,11 +5,12 @@ import { fetchWrapper } from "../utils/helpers/functions";
 import toast from "react-hot-toast";
 import { removeUser } from "../redux/userSlice";
 import { clearBlocked, clearFriends } from "../redux/userRelationsSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Grouplist = () => {
   const [list, setList] = useState([]);
   const dispatch = useDispatch();
+  const { isDarkMode } = useSelector((state) => state.theme);
 
   useEffect(() => {
     async function getData() {
@@ -33,7 +34,6 @@ const Grouplist = () => {
     }
     getData();
   }, [dispatch]);
-  console.log(list, "list11");
   return (
     <div className="relative">
       {/* {list.length > 0 ? <Search initialResults={list} name="group" /> : null} */}
@@ -44,7 +44,17 @@ const Grouplist = () => {
           searchKey="chatName"
           type="group"
         />
-      ) : null}
+      ) : (
+        <div className="flex justify-center items-center h-96  ">
+          <p
+            className={`text-lg ${
+              isDarkMode ? "text-darkText1" : "text-lightText1"
+            } `}
+          >
+            Create group to chat...
+          </p>
+        </div>
+      )}
     </div>
   );
 };

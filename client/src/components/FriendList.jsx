@@ -5,11 +5,13 @@ import { fetchWrapper } from "../utils/helpers/functions";
 import toast from "react-hot-toast";
 import { removeUser } from "../redux/userSlice";
 import { clearBlocked, clearFriends } from "../redux/userRelationsSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const FriendList = () => {
   const [list, setList] = useState([]);
   const dispatch = useDispatch();
+  const { isDarkMode } = useSelector((state) => state.theme);
+
   useEffect(() => {
     async function getData() {
       try {
@@ -35,9 +37,8 @@ const FriendList = () => {
     }
     getData();
   }, [dispatch]);
-  console.log(list, "friendlist");
   return (
-    <div className="relative">
+    <div className="relative h-full">
       {list.length > 0 ? (
         <Search
           initialResults={list}
@@ -45,7 +46,17 @@ const FriendList = () => {
           searchKey="username"
           type="chat"
         />
-      ) : null}
+      ) : (
+        <div className="flex justify-center items-center h-96  ">
+          <p
+            className={`text-lg ${
+              isDarkMode ? "text-darkText1" : "text-lightText1"
+            } `}
+          >
+            Add friends to chat them with...
+          </p>
+        </div>
+      )}
     </div>
   );
 };
