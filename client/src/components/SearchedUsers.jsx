@@ -1,10 +1,13 @@
 import React from "react";
 import { useAddFriend } from "../utils/hooks/useAddFriend";
 import { useRemoveFriend } from "../utils/hooks/useRemoveFriend";
+import { useSelector } from "react-redux";
 
-const SearchUsers = ({ results }) => {
+const SearchedUsers = ({ results }) => {
   const { addFriend, isLoadingAdd } = useAddFriend();
   const { remove, isLoadingRemove } = useRemoveFriend();
+  const { isDarkMode } = useSelector((state) => state.theme);
+
   const handleAddFriend = async (id) => {
     await addFriend(id);
   };
@@ -16,7 +19,11 @@ const SearchUsers = ({ results }) => {
       {results.map((res, i) => {
         return (
           <div key={i} className="w-full    ">
-            <div className="w-[92%] my-3 p-3 bg-neutral-700 mx-auto flex items-center  rounded-lg space-x-4  ">
+            <div
+              className={`w-[92%] my-3 p-3 ${
+                isDarkMode ? "bg-neutral-700" : "bg-gray-300"
+              }  bg-neutral-700 mx-auto flex items-center  rounded-lg space-x-4  `}
+            >
               {/* avatar */}
               <div className="avatar relative ">
                 <div className="w-14 h-14 rounded-full">
@@ -28,7 +35,13 @@ const SearchUsers = ({ results }) => {
               </div>
               {/* add and remove Friend */}
               <div>
-                <p className=" text-lg">{res?.username}</p>
+                <p
+                  className={`text-lg ${
+                    isDarkMode ? "text-darkText1" : "text-lightText1"
+                  }`}
+                >
+                  {res?.username}
+                </p>
                 <div>
                   <button
                     disabled={isLoadingAdd}
@@ -54,4 +67,4 @@ const SearchUsers = ({ results }) => {
   );
 };
 
-export default SearchUsers;
+export default SearchedUsers;
