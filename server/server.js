@@ -32,7 +32,7 @@ app.use(fileUpload());
 // };
 //app.use(cors());
 const corsOptions = {
-  origin: "*", // Allow all origins
+  origin: "https://sky-chat-chi.vercel.app", // Allow all origins
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Allow these HTTP methods
   allowedHeaders: "Content-Type,Authorization", // Allow these headers
   credentials: true, // Allow cookies to be sent
