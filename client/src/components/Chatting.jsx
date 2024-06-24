@@ -7,7 +7,7 @@ const Chatting = ({ chat }) => {
   const ui = useSelector((store) => store?.ui?.activeComponent);
   const { isDarkMode } = useSelector((state) => state.theme);
   return (
-    <div className="overflow-y-auto overflow-x-hidden  scrollbar-none">
+    <div className="scrollbar-none overflow-y-auto overflow-x-hidden  ">
       {chat.length > 0 ? (
         <div>
           {chat?.map((msg) => {
@@ -29,7 +29,11 @@ const Chatting = ({ chat }) => {
                   </div>
                 </div>
                 {ui === "group" ? (
-                  <div className="chat-header text-xs">
+                  <div
+                    className={`text-xs chat-header opacity-70 ${
+                      isDarkMode ? "text-darkText1" : "text-lightText1"
+                    } `}
+                  >
                     {msg?.senderId?.username}
                   </div>
                 ) : null}
@@ -46,8 +50,12 @@ const Chatting = ({ chat }) => {
                 >
                   {msg?.content}
                 </div>
-                <div className="chat-footer opacity-50">
-                  <time className="text-xs opacity-50">
+                <div className="chat-footer opacity-70">
+                  <time
+                    className={`text-xs  ${
+                      isDarkMode ? "text-darkText1" : "text-lightText1"
+                    } `}
+                  >
                     {ChatTime(msg?.createdAt)}
                   </time>
                 </div>

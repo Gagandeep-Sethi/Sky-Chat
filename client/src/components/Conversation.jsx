@@ -53,7 +53,7 @@ const Conversation = () => {
 
   return (
     <div
-      className={`h-full w-full scrollbar-none overflow-y-auto ${
+      className={`h-full w-full scrollbar-track-red-400 scrollbar-thumb-red-700 overflow-y-auto ${
         !isDarkMode ? "bg-[url('./images/bg.png')] bg-cover" : "bg-neutral-950"
       }  bg-center`}
     >
@@ -62,12 +62,10 @@ const Conversation = () => {
           isDarkMode
             ? "bg-[url('./images/dark.png')]"
             : "bg-[url('./images/light.png')]"
-        } bg-contain bg-center  items-center overflow-y-auto overflow-x-hidden md:border-r border-gray-400 shadow-lg`}
+        } bg-contain bg-center  items-center overflow-y-auto overflow-x-hidden md:border-r border-gray-400 `}
       >
         <div
-          className={`flex gap-6 md:justify-center items-center w-full md:py-3 pt-2.5 pb-1.5 sticky ${
-            isDarkMode ? "bg-neutral-900  " : "bg-white"
-          } top-0 z-10`}
+          className={`flex gap-6 md:justify-center items-center w-full md:py-3 pt-2.5 pb-1.5 sticky backdrop-blur-sm  shadow-lg top-0 z-10`}
         >
           <FaArrowLeft
             onClick={handleArrowClicked}
