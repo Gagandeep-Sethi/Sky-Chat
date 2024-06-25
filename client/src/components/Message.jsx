@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { formatChatTime } from "../utils/helpers/functions";
 import { useDispatch, useSelector } from "react-redux";
 import { setActiveComponent, setSelectedChat } from "../redux/uiSlice";
@@ -6,6 +6,16 @@ import { setActiveComponent, setSelectedChat } from "../redux/uiSlice";
 const Message = ({ msg, type }) => {
   const dispatch = useDispatch();
   const { isDarkMode } = useSelector((state) => state.theme);
+  const [isOnline, setIsOnline] = useState(false);
+  const { onlineUsers } = useSelector((store) => store.socket?.onlineUsers);
+
+  useEffect(() => {
+    if (msg?.FriendId) {
+      if (onlineUsers.include(msg?.FriendId)) {
+        setIsOnline(true);
+      }
+    }
+  }, [msg?.FriendId, onlineUsers]);
 
   const handleChatSelect = (FriendId) => {
     dispatch(setSelectedChat(FriendId));
@@ -31,7 +41,9 @@ const Message = ({ msg, type }) => {
             alt=""
           />
         </div>
-        <div className="bg-green-500 absolute rounded-full border-white border w-3 right-0"></div>
+        {isOnline && (
+          <div className="bg-green-500 absolute rounded-full border-white border w-3 right-0"></div>
+        )}
       </div>
 
       <div className="flex justify-between flex-1 items-center">

@@ -8,13 +8,35 @@ import {
 import HomePage from "./components/HomePage";
 import Signup from "./components/Signup";
 import Signin from "./components/Signin";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Error from "./components/Error";
 import EmailVerified from "./components/EmailVerified";
 import ResetPassword from "./components/ResetPassword";
+import { useEffect } from "react";
+import { io } from "socket.io-client";
+import { Fetch_Uri } from "./utils/constants";
+import { addSocket, updateOnlineUsers } from "./redux/socketSlice";
 
 function App() {
   const user = useSelector((store) => store?.user?.username);
+  const socket = useSelector((store) => store?.socket.socket);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (user) {
+      const socket = io(Fetch_Uri, {
+        withCredentials: true,
+      });
+      dispatch(addSocket(socket));
+      socket.on("getOnlineUsers", (onlineUsers) => {
+        console.log(onlineUsers, "onlineusers");
+        if (onlineUsers.length > 0) dispatch(updateOnlineUsers(onlineUsers));
+      });
+      return () => socket.close();
+    } else if (socket && !user) {
+      return () => socket.close();
+    }
+  }, [user, dispatch, socket]);
+  console.log(socket, "socket");
 
   return (
     <div className="scroll-smooth">
