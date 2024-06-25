@@ -84,7 +84,7 @@ exports.signup = async (req, res) => {
     //if username is not unique throw an error
     const name = await User.findOne({ username });
     if (name) {
-      throw new Error("This username already exists");
+      throw new Error("This username is already taken");
     }
     //encrpt. password usinf bcrypt
     const salt = await bcrypt.genSalt(10);
