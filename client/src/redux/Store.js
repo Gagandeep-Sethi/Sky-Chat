@@ -12,6 +12,13 @@ const Store = configureStore({
     theme: themeReducer,
     socket: socketReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["socket/setSocket", "socket/clearSocket"],
+        ignoredPaths: ["socket.socket"],
+      },
+    }),
 });
 
 export default Store;
