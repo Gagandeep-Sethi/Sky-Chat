@@ -7,15 +7,17 @@ const Message = ({ msg, type }) => {
   const dispatch = useDispatch();
   const { isDarkMode } = useSelector((state) => state.theme);
   const [isOnline, setIsOnline] = useState(false);
-  const { onlineUsers } = useSelector((store) => store.socket?.onlineUsers);
+  const { onlineUsers } = useSelector((store) => store.socket);
 
   useEffect(() => {
-    if (msg?.FriendId) {
-      if (onlineUsers.include(msg?.FriendId)) {
+    if (msg?.friendId) {
+      if (onlineUsers.includes(msg?.friendId)) {
         setIsOnline(true);
+      } else {
+        setIsOnline(false);
       }
     }
-  }, [msg?.FriendId, onlineUsers]);
+  }, [msg?.friendId, onlineUsers]);
 
   const handleChatSelect = (FriendId) => {
     dispatch(setSelectedChat(FriendId));

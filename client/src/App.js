@@ -13,30 +13,44 @@ import Error from "./components/Error";
 import EmailVerified from "./components/EmailVerified";
 import ResetPassword from "./components/ResetPassword";
 import { useEffect } from "react";
-import { io } from "socket.io-client";
+import {
+  initializeSocket,
+  updateOnlineUsers,
+  clearSocket,
+} from "./redux/socketSlice";
 import { Fetch_Uri } from "./utils/constants";
-import { addSocket, updateOnlineUsers } from "./redux/socketSlice";
+//import { socket } from "./socketService";
+import { io } from "socket.io-client";
 
 function App() {
   const user = useSelector((store) => store?.user?.username);
-  const socket = useSelector((store) => store?.socket.socket);
+
   const dispatch = useDispatch();
+  //console.log(socket, "socket");
   useEffect(() => {
     if (user) {
-      const socket = io(Fetch_Uri, {
-        withCredentials: true,
-      });
-      dispatch(addSocket(socket));
-      socket.on("getOnlineUsers", (onlineUsers) => {
-        console.log(onlineUsers, "onlineusers");
-        if (onlineUsers.length > 0) dispatch(updateOnlineUsers(onlineUsers));
-      });
-      return () => socket.close();
-    } else if (socket && !user) {
-      return () => socket.close();
+      dispatch(initializeSocket());
+    } else {
+      dispatch(clearSocket());
     }
-  }, [user, dispatch, socket]);
-  console.log(socket, "socket");
+  }, [dispatch, user]);
+  // useEffect(() => {
+  //   if (user) {
+  //     const socket = io(Fetch_Uri, {
+  //       withCredentials: true,
+  //     });
+  //     //dispatch(addSocket(socketio));
+  //     console.log(socket, "socket");
+  //     socket.on("getOnlineUsers", (onlineUsers) => {
+  //       console.log(onlineUsers, "onlineusers");
+  //       if (onlineUsers.length > 0) dispatch(updateOnlineUsers(onlineUsers));
+  //     });
+  //     return () => socket.close();
+  //   } else if (!user) {
+  //     //return () => socket.close();
+  //   }
+  // }, [user, dispatch]);
+  // //console.log(socket, "socket");
 
   return (
     <div className="scroll-smooth">
