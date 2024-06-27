@@ -15,6 +15,18 @@ const Conversation = () => {
   const [chat, setChat] = useState([]);
   const dispatch = useDispatch();
   const { isDarkMode } = useSelector((state) => state.theme);
+  const [isOnline, setIsOnline] = useState(false);
+  const { onlineUsers } = useSelector((store) => store.socket);
+
+  useEffect(() => {
+    if (selectedChat?.FriendId) {
+      if (onlineUsers.includes(selectedChat?.FriendId)) {
+        setIsOnline(true);
+      } else {
+        setIsOnline(false);
+      }
+    }
+  }, [selectedChat?.FriendId, onlineUsers]);
 
   function handleProfileClick() {
     if (selectedChat.isGroupChat) {
@@ -41,7 +53,6 @@ const Conversation = () => {
         console.log(response.error, "error json");
         toast.error(response.error?.message || "An error occurred");
       } else {
-        console.log(response, "group");
         setChat(response);
       }
     }
@@ -81,15 +92,29 @@ const Conversation = () => {
                 alt=""
               />
             </div>
+            {isOnline && (
+              <div className="bg-green-500 absolute rounded-full border-white border w-3 -right-1"></div>
+            )}
           </div>
-          <p
-            onClick={handleProfileClick}
-            className={`text-lg cursor-pointer ${
-              isDarkMode ? "text-white" : "text-black"
-            }`}
-          >
-            {selectedChat?.username}
-          </p>
+          <div>
+            <p
+              onClick={handleProfileClick}
+              className={`text-lg cursor-pointer ${
+                isDarkMode ? "text-white" : "text-black"
+              }`}
+            >
+              {selectedChat?.username}
+            </p>
+            {isOnline && (
+              <p
+                className={`text-xs text-center cursor-pointer ${
+                  isDarkMode ? "text-white" : "text-black"
+                }`}
+              >
+                (online)
+              </p>
+            )}
+          </div>
         </div>
 
         <div className="flex-1 w-full overflow-y-auto ">

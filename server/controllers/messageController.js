@@ -1,7 +1,7 @@
 const Chat = require("../models/Chat");
 const Message = require("../models/Message");
 const User = require("../models/User");
-
+const { io, getReceiverSocketId } = require("../socket/socket");
 exports.sendMessage = async (req, res) => {
   try {
     const { content } = req.body;
@@ -45,6 +45,25 @@ exports.sendMessage = async (req, res) => {
     chat.latestMessage = newMessage._id;
 
     await Promise.all([chat.save(), newMessage.save()]);
+    //socket io
+    console.log(id, "recid");
+    const receiverSocketId = getReceiverSocketId(id);
+    console.log(receiverSocketId, "rid");
+
+    // if (receiverSocketId) {
+    //   //   const message = newMessage
+    //   //     .select("-chatId")
+    //   //     .populate("senderId", "username profilePic")
+    //   //     .sort("createdAt")
+    //   //     .exec();
+    const message = await Message.findById(newMessage._id)
+      //.select("-chatId")
+      .populate("senderId", "username profilePic")
+      .sort("createdAt")
+      .exec();
+    console.log(message, "message");
+    io.to(chat._id.toString()).emit("newMessage", message);
+    //}
 
     res.status(200).json(newMessage);
   } catch (error) {
@@ -78,7 +97,7 @@ exports.getChat = async (req, res) => {
 
     // Fetch messages for the chat and populate senderId with username and profilePic fields
     const messages = await Message.find({ chatId: chat._id })
-      .select("-chatId")
+      //.select("-chatId")
       .populate("senderId", "username profilePic")
       .sort("createdAt")
       .exec();
