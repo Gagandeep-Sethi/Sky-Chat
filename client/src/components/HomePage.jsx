@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Sidebar from "./Sidebar";
 import Conversation from "./Conversation";
 import { useSelector } from "react-redux";
@@ -6,18 +6,10 @@ import AddFriends from "./AddFriends";
 import CreateGroup from "./CreateGroup";
 import ProfileContainer from "./ProfileContainer";
 import AddNewMembers from "./AddNewMembers";
-import socketService from "../utils/socketService";
 
 const HomePage = () => {
   const { activeComponent, selectedChat } = useSelector((state) => state.ui);
   const { isDarkMode } = useSelector((state) => state.theme);
-
-  // const handleProfileClick = () => {
-  //   dispatch(setActiveComponent("profile"));
-  // };
-  useEffect(() => {
-    socketService.connect();
-  }, []);
 
   return (
     <div className={`h-screen  w-screen flex justify-center items-center  `}>
@@ -88,16 +80,6 @@ const HomePage = () => {
       </div>
     </div>
   );
-  // return (
-  //   <div className=" bg-[url('./images/bg.png')] bg-cover bg-center   w-screen h-screen">
-  //     <div className="bg-[url('./images/light.png')] w-full h-full">
-  //       {/* <img src="/light.png" alt="" className="" /> */}
-  //     </div>
-  //   </div>
-  //   <div className="w-screen h-screen bg-neutral-900">
-  //     <div className="bg-[url('./images/dark.png')] w-full h-full"></div>
-  //   </div>
-  // );
 };
 
 export default HomePage;
