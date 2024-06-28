@@ -13,10 +13,16 @@ import { clearBlocked, clearFriends } from "../redux/userRelationsSlice";
 const Conversation = () => {
   const { selectedChat } = useSelector((state) => state.ui);
   const [chat, setChat] = useState([]);
+  const [remountKey, setRemountKey] = useState(0);
   const dispatch = useDispatch();
   const { isDarkMode } = useSelector((state) => state.theme);
   const [isOnline, setIsOnline] = useState(false);
   const { onlineUsers } = useSelector((store) => store.socket);
+
+  const handleFirstMessageSent = () => {
+    console.log("remount clicked");
+    setRemountKey((prevKey) => prevKey + 1);
+  };
 
   useEffect(() => {
     if (selectedChat?.FriendId) {
@@ -57,7 +63,7 @@ const Conversation = () => {
       }
     }
     if (selectedChat) getData();
-  }, [selectedChat, dispatch]);
+  }, [selectedChat, dispatch, remountKey]);
   function handleArrowClicked() {
     dispatch(setActiveComponent("sidebar"));
   }
@@ -118,10 +124,14 @@ const Conversation = () => {
         </div>
 
         <div className="flex-1 w-full overflow-y-auto ">
-          <Chatting chat={chat} />
+          <Chatting chat={chat} image={selectedChat?.profilePic} />
         </div>
         <div className="sticky bottom-1 w-full ">
-          <SendMessage id={selectedChat?.FriendId} />
+          <SendMessage
+            id={selectedChat?.FriendId}
+            onFirstMessageSent={handleFirstMessageSent}
+            chatId={chat.length > 0 ? chat[0]?.chatId : null}
+          />
         </div>
       </div>
     </div>
