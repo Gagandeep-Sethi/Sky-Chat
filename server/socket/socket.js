@@ -76,6 +76,14 @@ io.on("connection", (socket) => {
     socket.leave(roomId);
     console.log(`User ${socket.id} left room ${roomId}`);
   });
+  socket.on("typing", (room) => {
+    console.log("typing");
+    socket.in(room).emit("typing");
+  });
+  socket.on("stop typing", (room) => {
+    console.log("stop typing");
+    socket.in(room).emit("stop typing");
+  });
 
   socket.on("disconnect", () => {
     console.log("a user disconnected", socket.id);
