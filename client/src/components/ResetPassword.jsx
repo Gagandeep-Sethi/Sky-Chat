@@ -25,10 +25,10 @@ const ResetPassword = () => {
     newPassword: "",
     confirmPassword: "",
   });
-  const { reset, isLoading, error } = useResetPassword();
+  const { resetPassword, isLoading, error } = useResetPassword();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await reset(formValue);
+    await resetPassword(formValue);
   };
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,7 +59,7 @@ const ResetPassword = () => {
             <h1 className="font-mono text-3xl mb-10 text-customCyan">
               Reset Password
             </h1>
-            <p>{email}</p>
+            <p className="mb-4">{email}</p>
             <div>
               <form
                 onSubmit={handleSubmit}

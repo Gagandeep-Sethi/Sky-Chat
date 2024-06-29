@@ -127,8 +127,8 @@ const Signin = () => {
                   </span>
                 </Link>
               </p>
-              <p className="text-center text-black cursor-pointer  hover:text-blue-800 hover:underline ">
-                {/* <Link href="/user/forgotPassword">Forgot Password ?</Link> */}
+              <p className="text-center cursor-pointer text-sm  text-customCyan underline ">
+                <Link to="/user/forgotPassword">Forgot Password ?</Link>
               </p>
             </div>
             <div></div>

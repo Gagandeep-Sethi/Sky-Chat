@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { Fetch_Uri } from "../constants";
 
 export const useResetPassword = () => {
   const [error, setError] = useState(null);
@@ -12,7 +13,7 @@ export const useResetPassword = () => {
 
     setIsLoading(true);
     setError(null);
-    const response = await fetch(`/api/auth/resetPassword`, {
+    const response = await fetch(`${Fetch_Uri}/api/auth/resetPassword`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token, newPassword, confirmPassword }),
