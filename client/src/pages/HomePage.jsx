@@ -1,11 +1,11 @@
 import React from "react";
-import Sidebar from "./Sidebar";
-import Conversation from "./Conversation";
+import Sidebar from "../components/Sidebar";
+import Conversation from "../components/Conversation";
 import { useSelector } from "react-redux";
-import AddFriends from "./AddFriends";
-import CreateGroup from "./CreateGroup";
-import ProfileContainer from "./ProfileContainer";
-import AddNewMembers from "./AddNewMembers";
+import AddFriends from "../components/AddFriends";
+import CreateGroup from "../components/CreateGroup";
+import ProfileContainer from "../components/ProfileContainer";
+import AddNewMembers from "../components/AddNewMembers";
 
 const HomePage = () => {
   const { activeComponent, selectedChat } = useSelector((state) => state.ui);
