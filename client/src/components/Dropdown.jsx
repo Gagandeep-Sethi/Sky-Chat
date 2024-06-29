@@ -60,11 +60,11 @@ const Dropdown = () => {
             aria-orientation="vertical"
             aria-labelledby="options-menu"
           >
-            <div className="mx-auto w-44 hover:bg-gray-100 ">
+            <div className="mx-auto w-44 hover:bg-gray-400 ">
               <button
                 disabled={isLoading}
                 onClick={handleLogout}
-                className="items-center flex mx-auto   py-2 gap-2    hover:bg-gray-100"
+                className="items-center flex mx-auto   py-2 gap-2    hover:bg-gray-400"
                 role="menuitem"
                 //onClick={() => setIsOpen(false)}
               >
