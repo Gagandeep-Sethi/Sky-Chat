@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Fetch_Uri } from "../constants";
 
 export const useForgotPassword = () => {
   const [error, setError] = useState(null);
@@ -8,7 +9,7 @@ export const useForgotPassword = () => {
     const { email } = formValue;
     setIsLoading(true);
     setError(null);
-    const response = await fetch(`/api/auth/forgotPassword`, {
+    const response = await fetch(`${Fetch_Uri}/api/auth/forgotPassword`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),

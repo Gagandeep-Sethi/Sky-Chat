@@ -181,11 +181,7 @@ exports.forgotPassword = async (req, res) => {
     if (!user.verified) {
       throw new Error("User not verified !!");
     }
-    // if (user.googleId) {
-    //   throw new Error(
-    //     "You have signed in using google please login using your google account !!"
-    //   );
-    // }
+
     user.forgotPasswordToken = generateVerificationToken();
     user.forgotPasswordTokenExpiry = generateTokenExpiry();
     await user.save();

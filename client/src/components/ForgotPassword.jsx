@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useLogin } from "../utils/hooks/useLogin";
 import { Link } from "react-router-dom";
-const Signin = () => {
+import { useForgotPassword } from "../utils/hooks/useForgotPassword";
+const ForgotPassword = () => {
   const [formValue, setFormValue] = useState({
     email: "",
   });
-  const { forgot, isLoading, error } = useLogin();
+  const { forgot, isLoading, error } = useForgotPassword();
   const handleSubmit = async (e) => {
     e.preventDefault();
     await forgot(formValue);
@@ -93,4 +93,4 @@ const Signin = () => {
   );
 };
 
-export default Signin;
+export default ForgotPassword;
