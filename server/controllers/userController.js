@@ -50,8 +50,6 @@ exports.updateProfile = async (req, res) => {
     }
     const file = req.files?.profilePic;
     const { username } = req.body;
-    console.log(username, "username");
-    console.log(file, "file");
 
     if (file) {
       const filepath = await uploadImagesToCloudinary(file, "sky-chat/profile");
@@ -61,15 +59,26 @@ exports.updateProfile = async (req, res) => {
       user.profilePic = filepath;
     }
     if (username) {
+      //find user with this username
+      const usernameExist = await User.findOne({ username });
+      if (usernameExist) {
+        if (usernameExist._id.toString() !== requestingUserId.toString()) {
+          throw new Error(`${username} Username is already taken `);
+        }
+      }
       user.username = username;
     }
     await user.save();
-    console.log(user, "user");
-    res.status(200).json(user);
+
+    res.status(200).json({
+      email: user.email,
+      username: user.username,
+      profilePic: user?.profilePic,
+    });
   } catch (error) {
     console.log(error, "update profile error");
     if (error instanceof Error) {
-      res.status(400).json({ mesage: error.message });
+      res.status(400).json({ message: error.message });
     } else {
       res.status(500).json({ message: "server error" });
     }
@@ -330,9 +339,3 @@ exports.getBlockedList = async (req, res) => {
     }
   }
 };
-{
-  /* <div class="relative">
-    <input required id="username" class="peer rounded-lg border border-green-400 px-2 py-1 placeholder-transparent placeholder-shown:border-gray-600 focus:border-green-400 focus:outline-none " type="text" placeholder="enter your name" />
-    <label for="username" class="absolute left-2 top-1 cursor-text font-light text-gray-500 transition-all duration-200 peer-valid:-top-3 peer-valid:bg-white peer-valid:text-sm peer-valid:text-green-400 peer-focus:-top-3 peer-focus:bg-white peer-focus:text-sm peer-focus:text-green-400">Enter your name</label>
-  </div> */
-}

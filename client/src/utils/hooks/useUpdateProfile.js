@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Fetch_Uri } from "../constants";
 import toast from "react-hot-toast";
 import { fetchWrapper } from "../helpers/functions";
-import { removeUser } from "../../redux/userSlice";
+import { addUser, removeUser } from "../../redux/userSlice";
 import { clearBlocked, clearFriends } from "../../redux/userRelationsSlice";
 import { useDispatch } from "react-redux";
 
@@ -25,10 +25,10 @@ export const useUpdateProfile = () => {
         dispatch(clearFriends());
         dispatch(clearBlocked());
       } else if (response.error) {
-        toast.error("error updating profile");
-      }
-      if (response.ok) {
-        console.log(response, " json");
+        toast.error(response?.error?.message);
+      } else {
+        toast.success("Profile Updated");
+        dispatch(addUser(response));
       }
     } catch (error) {
       console.error("Fetch error:", error);

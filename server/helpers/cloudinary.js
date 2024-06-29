@@ -37,6 +37,7 @@ const deleteImage = async (publicId) => {
   });
   try {
     const result = await cloudinary.uploader.destroy(publicId);
+
     return result; // Return the result for further handling if needed
   } catch (error) {
     throw error; // Re-throw the error to be handled by the calling function
