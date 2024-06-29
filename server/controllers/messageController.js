@@ -46,28 +46,51 @@ exports.sendMessage = async (req, res) => {
 
     await Promise.all([chat.save(), newMessage.save()]);
     //socket io
-    console.log(id, "recid");
-    const receiverSocketId = getReceiverSocketId(id);
-    console.log(receiverSocketId, "rid");
+    if (chat.isGroupChat) {
+      const filteruser = chat?.users.filter(
+        (userId) => userId.toString() !== senderId.toString()
+      );
 
-    // if (receiverSocketId) {
-    //   //   const message = newMessage
-    //   //     .select("-chatId")
-    //   //     .populate("senderId", "username profilePic")
-    //   //     .sort("createdAt")
-    //   //     .exec();
+      filteruser.map(async (userId) => {
+        const receiverSocketId = getReceiverSocketId(userId.toString());
+        if (receiverSocketId) {
+          const message = await Message.findById(newMessage._id)
+            //.select("-chatId")
+            .populate("senderId", "username profilePic")
+            .exec();
+
+          io.to(receiverSocketId).emit("notification", {
+            message,
+            isGroup: true,
+            chatName: chat?.chatName,
+          });
+        }
+      });
+    } else {
+      const receiverSocketId = getReceiverSocketId(id);
+      if (receiverSocketId) {
+        const message = await Message.findById(newMessage._id)
+          .select("-chatId")
+          .populate("senderId", "username profilePic")
+          .exec();
+
+        io.to(receiverSocketId).emit("notification", {
+          message,
+          isGroup: true,
+        });
+      }
+    }
+
     const message = await Message.findById(newMessage._id)
       //.select("-chatId")
       .populate("senderId", "username profilePic")
       .sort("createdAt")
       .exec();
-    console.log(message, "message");
     io.to(chat._id.toString()).emit("newMessage", message);
     //}
 
     res.status(200).json(newMessage);
   } catch (error) {
-    console.error("Error in sending message", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -104,7 +127,6 @@ exports.getChat = async (req, res) => {
 
     return res.status(200).json(messages);
   } catch (error) {
-    console.error("Error in getting messages", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

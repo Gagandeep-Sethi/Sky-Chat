@@ -27,11 +27,9 @@ const Chatting = ({ chat, image }) => {
     if (!socket) return;
 
     socket.on("typing", () => {
-      console.log("typing called");
       setIsTyping(true);
     });
     socket.on("stop typing", () => {
-      console.log("stop typing called");
       setIsTyping(false);
     });
 
@@ -45,7 +43,6 @@ const Chatting = ({ chat, image }) => {
     if (socket && chat.length > 0) {
       dispatch(joinRoom(chat[0].chatId));
       socket.on("newMessage", (message) => {
-        console.log(message, "newmsg");
         setMessages((prevMessages) => [...prevMessages, message]);
         scrollToBottom();
       });

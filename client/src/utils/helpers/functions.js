@@ -35,7 +35,6 @@ export const fetchWrapper = async (url, options = {}) => {
     });
 
     if (!response.ok) {
-      console.log("response not ok");
       const error = await response.json();
       if (response.status === 401 || response.status === 403) {
         toast.error("Your login session expired please login again");
@@ -47,7 +46,6 @@ export const fetchWrapper = async (url, options = {}) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("There was a problem with the fetch operation:", error);
     return { error };
   }
 };

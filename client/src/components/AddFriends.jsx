@@ -36,13 +36,13 @@ const AddFriends = () => {
         if (response.unauthorized) {
           await logout(); // Perform the logout if the fetch wrapper indicates an unauthorized response
         } else if (response.error) {
-          console.log("error");
+          //console.log("error");
           toast.error(response.error?.message || "An error occurred");
         } else {
           setResults(filterResults(response, userRelations.friends));
         }
       } catch (error) {
-        console.error("Error fetching users:", error);
+        //console.error("Error fetching users:", error);
       }
     } else {
       setResults([]);

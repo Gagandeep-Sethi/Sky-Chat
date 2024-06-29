@@ -17,7 +17,6 @@ const EditGroupProfile = ({ onBack }) => {
 
   useEffect(() => {
     if (chat?.profile === "friend") {
-      console.log("hello");
       setProfileDetails({
         username: chat?.selectedChat?.username,
         profilePic: chat?.selectedChat?.profilePic,

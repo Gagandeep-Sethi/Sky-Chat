@@ -21,7 +21,6 @@ const requireAuth = async (req, res, next) => {
     req.user = user; //we are attaching user property to req and passing it on to next middleware of main function and we can use that tha user property as we know now the user is authenticated
     next();
   } catch (error) {
-    console.log("error in require auth ", error);
     if (error instanceof jwt.JsonWebTokenError) {
       return res.status(401).json({ message: "unauthorised invalid token" });
     }

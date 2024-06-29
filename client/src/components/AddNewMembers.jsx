@@ -39,7 +39,7 @@ const AddNewMembers = () => {
           setFilteredUsers(response);
         }
       } catch (error) {
-        console.error(error);
+        //console.error(error);
       }
     };
 
@@ -62,7 +62,7 @@ const AddNewMembers = () => {
       setFilteredUsers(initialUsers);
     }
   };
-  console.log(selectedUsers, "selectdusersssss");
+
   const handleAddMembers = async () => {
     const userIds = selectedUsers.map((user) => user.friendId);
     try {
@@ -77,10 +77,8 @@ const AddNewMembers = () => {
         dispatch(clearFriends());
         dispatch(clearBlocked()); // Perform the logout if the fetch wrapper indicates an unauthorized response
       } else if (response.error) {
-        console.log(response.error, "error json");
         toast.error(response.error?.message || "An error occurred");
       } else {
-        console.log(response, " json");
         toast.success("Members added in group ");
       }
     } catch (error) {}

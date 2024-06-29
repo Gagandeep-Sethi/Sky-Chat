@@ -32,11 +32,7 @@ export const useUpdateGroupProfile = () => {
       } else if (response.error) {
         toast.error("error updating profile");
       }
-      if (response.ok) {
-        console.log(response, " json");
-      }
     } catch (error) {
-      console.error("Fetch error:", error);
       toast.error("An error occurred");
     } finally {
       setIsLoading(false);

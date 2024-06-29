@@ -42,10 +42,8 @@ const MemberDropdown = ({ userId, chatId }) => {
         dispatch(clearFriends());
         dispatch(clearBlocked()); // Perform the logout if the fetch wrapper indicates an unauthorized response
       } else if (response.error) {
-        console.log(response.error, "error json");
         toast.error(response.error?.message || "An error occurred");
       } else {
-        console.log(response, " json");
         toast.success("User promoted to admin");
       }
     } catch (error) {}
@@ -63,10 +61,8 @@ const MemberDropdown = ({ userId, chatId }) => {
         dispatch(clearFriends());
         dispatch(clearBlocked()); // Perform the logout if the fetch wrapper indicates an unauthorized response
       } else if (response.error) {
-        console.log(response.error, "error json");
         toast.error(response.error?.message || "An error occurred");
       } else {
-        console.log(response, " json");
         toast.success("User removed from group ");
       }
     } catch (error) {}

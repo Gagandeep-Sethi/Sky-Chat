@@ -29,13 +29,11 @@ export const useSendMsg = () => {
       } else if (response.error) {
         toast.error("error sending message");
       } else {
-        console.log(response, " json");
         if (!chatId) {
           onFirstMessageSent();
         }
       }
     } catch (error) {
-      console.error("Fetch error:", error);
       toast.error("An error occurred");
     } finally {
       setIsLoading(false);

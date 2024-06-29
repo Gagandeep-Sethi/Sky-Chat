@@ -23,9 +23,7 @@ const sendEmail = (email, subject, text, html) => {
       text: text,
       html: html,
     });
-  } catch (error) {
-    console.log(error, "sending mail error");
-  }
+  } catch (error) {}
 };
 
 module.exports = {

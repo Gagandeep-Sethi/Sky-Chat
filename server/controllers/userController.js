@@ -8,7 +8,6 @@ const Message = require("../models/Message");
 const User = require("../models/User");
 
 exports.search = async (req, res) => {
-  console.log("req reached");
   try {
     const requestingUserId = req.user._id;
     const user = await User.findById(requestingUserId);
@@ -16,8 +15,6 @@ exports.search = async (req, res) => {
       throw new Error("user not found");
     }
     const { query } = req.query;
-
-    console.log(query, "query");
 
     if (!query) {
       return res.status(400).json({ message: "Query parameter is required" });
@@ -76,7 +73,6 @@ exports.updateProfile = async (req, res) => {
       profilePic: user?.profilePic,
     });
   } catch (error) {
-    console.log(error, "update profile error");
     if (error instanceof Error) {
       res.status(400).json({ message: error.message });
     } else {
@@ -95,7 +91,6 @@ exports.addFriend = async (req, res) => {
       throw new Error("User not found");
     }
     const { id: friendId } = req.params;
-    console.log(friendId, "friendId");
     const friend = await User.findById(friendId);
 
     if (!friend) {
@@ -134,7 +129,6 @@ exports.addFriend = async (req, res) => {
 
     res.status(200).json(requestingUserFriendList);
   } catch (error) {
-    console.log(error, "adding friend error");
     if (error instanceof Error) {
       res.status(400).json({ message: error.message });
     } else {
@@ -180,7 +174,6 @@ exports.removeFriend = async (req, res) => {
 
     return res.status(200).json(friendList);
   } catch (error) {
-    console.log(error, "remove friend error");
     if (error instanceof Error) {
       res.status(400).json({ message: error.message });
     } else {
@@ -219,7 +212,6 @@ exports.blockFriend = async (req, res) => {
     await friendList.save();
     res.status(200).json(friendList);
   } catch (error) {
-    console.log(error, "blocking  friend error");
     if (error instanceof Error) {
       res.status(400).json({ message: error.message });
     } else {
@@ -255,7 +247,6 @@ exports.removeBlockedFriend = async (req, res) => {
 
     return res.status(200).json(friendList);
   } catch (error) {
-    console.log(error, "remove friend error");
     if (error instanceof Error) {
       res.status(400).json({ message: error.message });
     } else {
@@ -306,7 +297,6 @@ exports.getFriendList = async (req, res) => {
 
     res.status(200).json(friendsWithLatestMessages);
   } catch (error) {
-    console.log(error, "get friendlist error");
     if (error instanceof Error) {
       res.status(400).json({ message: error.message });
     } else {
@@ -331,7 +321,6 @@ exports.getBlockedList = async (req, res) => {
       res.status(200).json(blockedList.blocked);
     }
   } catch (error) {
-    console.log(error, "get blockedlist error");
     if (error instanceof Error) {
       res.status(400).json({ message: error.message });
     } else {

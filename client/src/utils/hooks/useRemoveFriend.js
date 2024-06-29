@@ -32,15 +32,12 @@ export const useRemoveFriend = () => {
         dispatch(clearFriends());
         dispatch(clearBlocked());
       } else if (response.error) {
-        console.log(response.error, "error json");
         toast.error(response.error?.message || "An error occurred");
       } else {
-        console.log(response, " json");
         toast.success("User removed from friend list");
         dispatch(setFriends(response?.friends));
       }
     } catch (error) {
-      console.error("Fetch error:", error);
       toast.error("An error occurred");
     } finally {
       setIsLoading(false);

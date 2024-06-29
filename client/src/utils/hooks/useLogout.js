@@ -21,7 +21,6 @@ export const useLogout = () => {
     const json = await response.json();
 
     if (!response.ok) {
-      console.log(json, "error json");
       toast.error(json?.message);
       setIsLoading(false);
     }

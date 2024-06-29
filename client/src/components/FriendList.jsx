@@ -28,10 +28,8 @@ const FriendList = () => {
           dispatch(clearFriends());
           dispatch(clearBlocked());
         } else if (response.error) {
-          console.log(response.error, "error json");
           toast.error(response.error?.message || "An error occurred");
         } else {
-          console.log(response, "json");
           setList(response);
         }
       } catch (error) {}

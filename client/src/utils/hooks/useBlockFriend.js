@@ -37,7 +37,6 @@ export const useBlockFriend = () => {
         dispatch(setBlocked(response?.blocked));
       }
     } catch (error) {
-      console.error("Fetch error:", error);
       toast.error("An error occurred");
     } finally {
       setIsLoading(false);

@@ -9,7 +9,6 @@ const loadFromLocalStorage = (key) => {
     }
     return JSON.parse(serializedState);
   } catch (err) {
-    console.error("Could not load from local storage", err);
     return undefined;
   }
 };
@@ -20,7 +19,7 @@ const saveToLocalStorage = (key, state) => {
     const serializedState = JSON.stringify(state);
     localStorage.setItem(key, serializedState);
   } catch (err) {
-    console.error("Could not save to local storage", err);
+    //console.error("Could not save to local storage", err);
   }
 };
 

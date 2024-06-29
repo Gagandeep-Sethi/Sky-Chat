@@ -19,12 +19,10 @@ export const useSignup = (formValue) => {
     const json = await response.json();
 
     if (!response.ok) {
-      console.log(json, "error json");
       setIsLoading(false);
       setError(json.message);
     }
     if (response.ok) {
-      console.log(json, "json");
       setIsLoading(false);
       setError(json.message);
     }

@@ -20,7 +20,6 @@ const Conversation = () => {
   const { onlineUsers } = useSelector((store) => store.socket);
 
   const handleFirstMessageSent = () => {
-    console.log("remount clicked");
     setRemountKey((prevKey) => prevKey + 1);
   };
 
@@ -56,7 +55,6 @@ const Conversation = () => {
         dispatch(clearFriends());
         dispatch(clearBlocked());
       } else if (response.error) {
-        console.log(response.error, "error json");
         toast.error(response.error?.message || "An error occurred");
       } else {
         setChat(response);

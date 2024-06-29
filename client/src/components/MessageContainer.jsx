@@ -2,7 +2,6 @@ import React from "react";
 import Message from "./Message";
 
 const MessageContainer = ({ list, type }) => {
-  console.log(list, "list");
   return (
     <div className="w-full h-full    overflow-y-auto space-y-3 ">
       {list.length === 0 ? (

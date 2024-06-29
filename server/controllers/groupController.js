@@ -9,8 +9,6 @@ exports.createGroupChat = async (req, res) => {
     const { users, groupName } = req.body;
     const groupAdmin = req.user._id;
     const file = req.files?.profilePic;
-    console.log(users, "users");
-    console.log(groupName, "name");
 
     if (!users || users.length < 2) {
       return res
@@ -47,7 +45,6 @@ exports.createGroupChat = async (req, res) => {
 
     return res.status(201).json(group);
   } catch (error) {
-    console.error("Error creating group chat", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -55,7 +52,6 @@ exports.updateGroupProfile = async (req, res) => {
   try {
     const { chatId, chatName } = req.body;
     const file = req.files?.profilePic;
-    console.log(chatId, chatName, "djjjj");
 
     // Find the group by ID
     let group = await Chat.findById(chatId);
@@ -70,7 +66,6 @@ exports.updateGroupProfile = async (req, res) => {
     // Check if the user is an admin
     const isAdmin = group.groupAdmin.includes(req.user._id);
     if (!isAdmin) {
-      console.log("user,not found");
       return res.status(403).json({
         message: "User trying to update group settings is not an admin",
       });
@@ -95,7 +90,6 @@ exports.updateGroupProfile = async (req, res) => {
       group,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: "Error updating group",
     });
@@ -139,7 +133,6 @@ exports.getGroupChats = async (req, res) => {
 
     res.status(200).json(groupChatsWithDetails);
   } catch (error) {
-    console.log(error, "get group chats error");
     if (error instanceof Error) {
       res.status(400).json({ message: error.message });
     } else {
@@ -148,7 +141,6 @@ exports.getGroupChats = async (req, res) => {
   }
 };
 exports.groupInfo = async (req, res) => {
-  console.log("req reached");
   try {
     const chatId = req.params.id;
     const chat = await Chat.findById(chatId)
@@ -161,7 +153,6 @@ exports.groupInfo = async (req, res) => {
 
     res.status(200).json(chat);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -318,15 +309,12 @@ exports.leaveGroup = async (req, res) => {
     // If the user was an admin and there are no admins left, make the first user in the group an admin
     if (chat.groupAdmin.length === 0 && chat.users.length > 0) {
       chat.groupAdmin.push(chat.users[0]);
-      console.log("New Admin Assigned:", chat.users[0]);
     }
 
     await chat.save();
-    console.log("Chat saved successfully.");
 
     res.status(200).json({ message: "User has left the group", chat });
   } catch (error) {
-    console.error("Server Error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };

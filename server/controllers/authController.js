@@ -42,7 +42,6 @@ exports.login = async (req, res) => {
       blocked,
     });
   } catch (error) {
-    console.log(error, "sigup error");
     if (error instanceof Error) {
       res.status(400).json({ message: error.message });
     } else {
@@ -120,7 +119,6 @@ exports.logout = (req, res) => {
     res.cookie("jwt", "", { maxAge: 0 });
     res.status(200).json({ message: "Logged Out Successful" });
   } catch (error) {
-    console.log(error);
     res.status(400).json({ message: "Error occured during logout" });
   }
 };
@@ -163,7 +161,6 @@ exports.changePassword = async (req, res) => {
     res.cookie("jwt", "", { maxAge: 0 });
     return res.status(200).json({ message: "Password updated please login" });
   } catch (error) {
-    console.log(error, "sigup error");
     if (error instanceof Error) {
       res.status(400).json({ message: error.message });
     } else {
@@ -196,7 +193,6 @@ exports.forgotPassword = async (req, res) => {
       message: "Reset password link sent to your email please checkout",
     });
   } catch (error) {
-    console.log(error, "sigup error");
     if (error instanceof Error) {
       res.status(400).json({ message: error.message });
     } else {

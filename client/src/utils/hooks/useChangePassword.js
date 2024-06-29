@@ -31,7 +31,6 @@ export const useChangePassword = () => {
       );
 
       if (response.unauthorized) {
-        console.log("unauth got");
         dispatch(removeUser());
         dispatch(clearFriends());
         dispatch(clearBlocked()); // Perform the logout if the fetch wrapper indicates an unauthorized response

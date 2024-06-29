@@ -27,15 +27,12 @@ export const useAddFriend = () => {
       );
 
       if (response.unauthorized) {
-        console.log("unauth got");
         dispatch(removeUser());
         dispatch(clearFriends());
         dispatch(clearBlocked()); // Perform the logout if the fetch wrapper indicates an unauthorized response
       } else if (response.error) {
-        console.log(response.error, "error json");
         toast.error(response.error?.message || "An error occurred");
       } else {
-        console.log(response, " json");
         toast.success("User added to friend list");
         dispatch(setFriends(response?.friends));
         setIsLoading(false);

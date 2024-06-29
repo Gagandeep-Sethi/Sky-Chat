@@ -23,7 +23,7 @@ function App() {
   const { FriendId } = useSelector((state) => state.ui?.selectedChat);
 
   const dispatch = useDispatch();
-  //console.log(socket, "socket");
+
   useEffect(() => {
     if (user) {
       dispatch(initializeSocket());
@@ -31,7 +31,7 @@ function App() {
       dispatch(clearSocket());
     }
   }, [dispatch, user]);
-  console.log(FriendId, "friendid");
+
   function setToast(notificationData) {
     toast.custom((t) => (
       <div
@@ -78,8 +78,6 @@ function App() {
     if (!socket) return;
 
     socket.on("notification", (notificationData) => {
-      console.log(notificationData, "notification");
-
       if (notificationData?.isGroup) {
         if (notificationData?.message?.chatId !== FriendId) {
           setToast(notificationData);
@@ -113,8 +111,14 @@ function App() {
             element={user ? <Navigate to="/" /> : <Signup />}
           />
           <Route path="/verify" element={<EmailVerified />} />
-          <Route path="/user/forgotPassword" element={<ForgotPassword />} />
-          <Route path="/user/resetPassword" element={<ResetPassword />} />
+          <Route
+            path="/user/forgotPassword"
+            element={user ? <Navigate to="/" /> : <ForgotPassword />}
+          />
+          <Route
+            path="/user/resetPassword"
+            element={user ? <Navigate to="/" /> : <ResetPassword />}
+          />
           <Route path="*" element={<Error />} />
         </Routes>
       </Router>
