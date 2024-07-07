@@ -34,6 +34,7 @@ app.use(fileUpload());
 const corsOptions = {
   origin: ["https://sky-chat-chi.vercel.app", "http://localhost:3000"], // Allow all origins
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Allow these HTTP methods
+  preflightContinue: true,
   allowedHeaders:
     "Origin, X-Requested-With, Content-Type, Accept, Authorization", // Allow these headers
   credentials: true, // Allow cookies to be sent

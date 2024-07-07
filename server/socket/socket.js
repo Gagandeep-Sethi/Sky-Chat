@@ -12,6 +12,9 @@ const io = new Server(server, {
     origin: ["http://localhost:3000", "https://sky-chat-chi.vercel.app"],
     // origin: "*",
     methods: ["GET", "PUT", "POST"],
+    preflightContinue: true,
+    allowedHeaders:
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization",
     credentials: true,
   },
 });
