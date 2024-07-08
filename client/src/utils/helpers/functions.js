@@ -49,3 +49,36 @@ export const fetchWrapper = async (url, options = {}) => {
     return { error };
   }
 };
+// function getCookie(name) {
+//   const value = `; ${document.cookie}`;
+//   const parts = value.split(`; ${name}=`);
+//   if (parts.length === 2) return parts.pop().split(";").shift();
+// }
+
+// export const fetchWrapper = async (url, options = {}) => {
+//   try {
+//     const token = getCookie("jwt"); // Get the token from the cookie
+//     console.log(token, "token");
+//     const response = await fetch(url, {
+//       ...options,
+//       headers: {
+//         ...options.headers,
+//         Authorization: `Bearer ${token}`, // Include token in the Authorization header
+//       },
+//     });
+
+//     if (!response.ok) {
+//       const error = await response.json();
+//       if (response.status === 401 || response.status === 403) {
+//         toast.error("Your login session expired. Please login again.");
+//         return { unauthorized: true };
+//       }
+//       return { error };
+//     }
+
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     return { error };
+//   }
+// };
