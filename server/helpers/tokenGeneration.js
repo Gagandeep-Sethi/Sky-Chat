@@ -30,7 +30,7 @@ const generateJwtToken = (_id, res) => {
   res.cookie("jwt", token, {
     httpOnly: true,
     maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
-    sameSite: "lax", // 'none' for cross-domain cookies
+    sameSite: "none", // 'none' for cross-domain cookies
     secure: true, // ensure this is true if your site is HTTPS
   });
 };
