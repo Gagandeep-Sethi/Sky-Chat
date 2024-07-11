@@ -7,13 +7,18 @@ const app = express();
 const onlineUsers = {};
 
 const server = http.createServer(app);
+
 const io = new Server(server, {
   cors: {
     origin: "https://sky-chat-chi.vercel.app",
-    methods: ["GET", "PUT", "POST"],
-    preflightContinue: true,
-    allowedHeaders:
-      "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+    allowedHeaders: [
+      "Origin",
+      "X-Requested-With",
+      "Content-Type",
+      "Accept",
+      "Authorization",
+    ],
     credentials: true,
   },
 });
