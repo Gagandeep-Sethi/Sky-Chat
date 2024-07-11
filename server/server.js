@@ -90,7 +90,7 @@ require("dotenv").config();
 
 // Configure CORS options
 const corsOptions = {
-  origin: "http://localhost:3000", //  client domain
+  origin: "https://sky-chat-chi.vercel.app", //  client domain
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Allowed HTTP methods
   preflightContinue: true,
   allowedHeaders:
