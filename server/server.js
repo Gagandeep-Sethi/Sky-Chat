@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const userRouter = require("./routes/userRoute");
 const fileUpload = require("express-fileupload");
-//const cors = require("cors");
+const cors = require("cors");
 const { app, server } = require("./socket/socket");
 require("dotenv").config();
 //const app = express();
@@ -31,15 +31,15 @@ app.use(fileUpload());
 //   credentials: true, // Helps to set credentials cookie mainly
 // };
 // app.use(cors(corsOptions));
-// const corsOptions = {
-//   origin: ["http://localhost:3000"], // Allow all origins
-//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Allow these HTTP methods
-//   preflightContinue: true,
-//   allowedHeaders:
-//     "Origin, X-Requested-With, Content-Type, Accept, Authorization", // Allow these headers
-//   credentials: true, // Allow cookies to be sent
-// };
-// app.use(cors(corsOptions)); // Enable CORS with options
+const corsOptions = {
+  origin: "https://sky-chat-chi.vercel.app", // Allow all origins
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Allow these HTTP methods
+  preflightContinue: true,
+  allowedHeaders:
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization", // Allow these headers
+  credentials: true, // Allow cookies to be sent
+};
+app.use(cors(corsOptions)); // Enable CORS with options
 
 mongoose.connect(process.env.MONGODB_URI);
 
@@ -53,20 +53,20 @@ app.get("/", (req, res) => {
   res.send("hi");
 });
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://sky-chat-chi.vercel.app");
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("preflightContinue", "true");
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET,HEAD,OPTIONS,POST,PUT,DELETE"
-  );
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  next();
-});
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "https://sky-chat-chi.vercel.app");
+//   res.header("Access-Control-Allow-Credentials", "true");
+//   res.header("preflightContinue", "true");
+//   res.header(
+//     "Access-Control-Allow-Methods",
+//     "GET,HEAD,OPTIONS,POST,PUT,DELETE"
+//   );
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+//   );
+//   next();
+// });
 
 app.use("/api/auth", authRouter);
 app.use("/api/message", messageRouter);
