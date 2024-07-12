@@ -31,8 +31,8 @@ export const fetchWrapper = async (url, options = {}) => {
   try {
     const response = await fetch(url, {
       ...options,
-      // referrerPolicy: "strict-origin-when-cross-origin",
-      // mode: "cors",
+      referrerPolicy: "strict-origin-when-cross-origin",
+      mode: "cors",
       credentials: "include", // Include credentials (cookies)
     });
 
