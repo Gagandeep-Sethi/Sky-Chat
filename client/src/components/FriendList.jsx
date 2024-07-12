@@ -12,7 +12,6 @@ const FriendList = () => {
   const dispatch = useDispatch();
   const { isDarkMode } = useSelector((state) => state.theme);
   const { friends } = useSelector((store) => store?.userRelations);
-
   useEffect(() => {
     async function getData() {
       try {

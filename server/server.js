@@ -110,6 +110,11 @@ app.use(cookieParser());
 // Required to handle file upload and remove the need to convert image to buffer manually
 app.use(fileUpload());
 
+app.use((req, res, next) => {
+  console.log("Cookies:", req.cookies); // Log incoming cookies for debugging
+  next();
+});
+
 mongoose.connect(process.env.MONGODB_URI);
 
 const db = mongoose.connection;
@@ -131,3 +136,4 @@ app.use("/api/user", userRouter);
 server.listen(process.env.PORT, () =>
   console.log(`Server listening at port ${process.env.PORT}`)
 );
+//origin: "http://localhost:3000",

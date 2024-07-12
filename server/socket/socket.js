@@ -82,3 +82,4 @@ io.on("connection", (socket) => {
 });
 
 module.exports = { app, io, server, getReceiverSocketId };
+//origin: "http://localhost:3000",
