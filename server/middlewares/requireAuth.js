@@ -4,8 +4,8 @@ const User = require("../models/User");
 const requireAuth = async (req, res, next) => {
   try {
     //const token = req.cookies.jwt; //getting a cookie from req name jwt
-    const token = req.cookies._vercel_jwt; //for production
-
+    const token = req.cookies; //for production
+    console.log(token, "cookie in req auth");
     if (!token) {
       return res.status(401).json({ message: "unauthorised token not found" });
     }
