@@ -40,18 +40,23 @@ export const {
 } = socketSlice.actions;
 
 export const initializeSocket = () => async (dispatch) => {
+  const token = localStorage.getItem("token"); // Retrieve your token from local storage
+
   const socket = io(Fetch_Uri, {
-    withCredentials: true,
+    auth: {
+      token: token, // Send the token as part of the handshake
+    },
+    withCredentials: true, // Set this if you need to include credentials
   });
 
   socket.on("connect", () => {
-    //console.log("Socket connected:", socket.id);
+    console.log("Socket connected:", socket.id);
   });
   socket.on("getOnlineUsers", (onlineUsers) => {
     if (onlineUsers.length > 0) dispatch(updateOnlineUsers(onlineUsers));
   });
   socket.on("disconnect", () => {
-    //console.log("Socket disconnected");
+    console.log("Socket disconnected");
   });
 
   dispatch(setSocket(socket));
