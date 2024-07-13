@@ -27,14 +27,18 @@ const crypto = require("crypto");
 
 const generateJwtToken = (_id, res) => {
   const token = jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "15d" });
-  return res.cookie("jwt", token, {
-    httpOnly: true,
-    maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
-    sameSite: "none", // 'none' for cross-domain cookies
-    secure: true, // ensure this is true if your site is HTTPS
-    // path: "/",
-    // domain: "https://sky-chat-chi.vercel.app",
-  });
+  return token;
+
+  //cookie method
+
+  // return res.cookie("jwt", token, {
+  //   httpOnly: true,
+  //   maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
+  //   sameSite: "none", // 'none' for cross-domain cookies
+  //   secure: true, // ensure this is true if your site is HTTPS
+  //   // path: "/",
+  //   // domain: "https://sky-chat-chi.vercel.app",
+  // });
 };
 
 const generateVerificationToken = () => {

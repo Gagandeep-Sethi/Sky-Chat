@@ -26,7 +26,7 @@ exports.login = async (req, res) => {
     if (!user.verified) {
       throw new Error("Verify your Email !!");
     }
-    generateJwtToken(user?._id, res);
+
     const friendsList = await FriendList.findOne({ userId: user?._id });
     let friends = [];
     let blocked = [];
@@ -34,18 +34,19 @@ exports.login = async (req, res) => {
       friends = friendsList?.friends;
       blocked = friendsList?.blocked;
     }
-    res.status(200).json({
+    return res.status(200).json({
       email: user.email,
       username: user.username,
       profilePic: user?.profilePic,
       friends,
       blocked,
+      token: generateJwtToken(user?._id, res),
     });
   } catch (error) {
     if (error instanceof Error) {
-      res.status(400).json({ message: error.message });
+      return res.status(400).json({ message: error.message });
     } else {
-      res.status(500).json({ message: "server error" });
+      return res.status(500).json({ message: "server error" });
     }
   }
 };
@@ -103,23 +104,23 @@ exports.signup = async (req, res) => {
       `<p>Click the following link to verify your email: <a href="${process.env.DOMAIN}/verify?token=${user.verifyToken}&action=verify-email">Verify Email</a></p>`
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Verification link send to your email please verify !!",
     });
   } catch (error) {
     if (error instanceof Error) {
-      res.status(400).json({ message: error.message });
+      return res.status(400).json({ message: error.message });
     } else {
-      res.status(500).json({ message: "server error" });
+      return res.status(500).json({ message: "server error" });
     }
   }
 };
 exports.logout = (req, res) => {
   try {
     res.cookie("jwt", "", { maxAge: 0 });
-    res.status(200).json({ message: "Logged Out Successful" });
+    return res.status(200).json({ message: "Logged Out Successful" });
   } catch (error) {
-    res.status(400).json({ message: "Error occured during logout" });
+    return res.status(400).json({ message: "Error occured during logout" });
   }
 };
 exports.changePassword = async (req, res) => {
@@ -162,9 +163,9 @@ exports.changePassword = async (req, res) => {
     return res.status(200).json({ message: "Password updated please login" });
   } catch (error) {
     if (error instanceof Error) {
-      res.status(400).json({ message: error.message });
+      return res.status(400).json({ message: error.message });
     } else {
-      res.status(500).json({ message: "server error" });
+      return res.status(500).json({ message: "server error" });
     }
   }
 };
@@ -194,9 +195,9 @@ exports.forgotPassword = async (req, res) => {
     });
   } catch (error) {
     if (error instanceof Error) {
-      res.status(400).json({ message: error.message });
+      return res.status(400).json({ message: error.message });
     } else {
-      res.status(500).json({ message: "server error" });
+      return res.status(500).json({ message: "server error" });
     }
   }
 };
