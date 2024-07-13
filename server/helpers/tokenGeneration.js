@@ -27,7 +27,7 @@ const crypto = require("crypto");
 
 const generateJwtToken = (_id, res) => {
   const token = jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "15d" });
-  res.cookie("jwt", token, {
+  return res.cookie("jwt", token, {
     httpOnly: true,
     maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
     sameSite: "none", // 'none' for cross-domain cookies
