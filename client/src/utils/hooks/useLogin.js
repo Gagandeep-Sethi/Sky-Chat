@@ -27,9 +27,14 @@ export const useLogin = (formValue) => {
       setError(json.message);
     }
     if (response.ok) {
+      //basic details of user
       dispatch(addUser(json));
+      //user friends array
       dispatch(setFriends(json?.friends));
+      //user blocked friends array
       dispatch(setBlocked(json?.blocked));
+      //user auth token
+      localStorage.setItem("token", json?.token);
       setIsLoading(false);
     }
   };
