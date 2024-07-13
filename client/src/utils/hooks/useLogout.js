@@ -28,6 +28,8 @@ export const useLogout = () => {
       dispatch(removeUser());
       dispatch(clearFriends());
       dispatch(clearBlocked());
+      // Remove the token from local storage
+      localStorage.removeItem("token");
       setIsLoading(false);
     }
   };

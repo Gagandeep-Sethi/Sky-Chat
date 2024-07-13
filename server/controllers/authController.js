@@ -117,10 +117,12 @@ exports.signup = async (req, res) => {
 };
 exports.logout = (req, res) => {
   try {
-    res.cookie("jwt", "", { maxAge: 0 });
+    // Since we are using Bearer tokens, you don't need to clear a cookie.
+    //  to handle token invalidation on the client side instead.
+
     return res.status(200).json({ message: "Logged Out Successful" });
   } catch (error) {
-    return res.status(400).json({ message: "Error occured during logout" });
+    return res.status(400).json({ message: "Error occurred during logout" });
   }
 };
 exports.changePassword = async (req, res) => {
