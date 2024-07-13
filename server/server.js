@@ -81,7 +81,6 @@ const authRouter = require("./routes/authRoute");
 const messageRouter = require("./routes/messageRoute");
 const groupRouter = require("./routes/groupRoute");
 const mongoose = require("mongoose");
-const cookieParser = require("cookie-parser");
 const userRouter = require("./routes/userRoute");
 const fileUpload = require("express-fileupload");
 const cors = require("cors");
@@ -104,16 +103,8 @@ app.use(cors(corsOptions));
 // Require for JSON conversion of content in body
 app.use(express.json());
 
-// Required for cookie management
-app.use(cookieParser());
-
 // Required to handle file upload and remove the need to convert image to buffer manually
 app.use(fileUpload());
-
-app.use((req, res, next) => {
-  console.log("Cookies:", req.cookies); // Log incoming cookies for debugging
-  next();
-});
 
 mongoose.connect(process.env.MONGODB_URI);
 
