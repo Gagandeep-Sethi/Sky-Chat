@@ -29,8 +29,18 @@ export const ChatTime = (chatTime) => {
 
 export const fetchWrapper = async (url, options = {}) => {
   try {
+    // Retrieve the token from local storage
+    const token = localStorage.getItem("token");
+
+    // Prepare headers
+    const headers = {
+      ...options.headers,
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
+
     const response = await fetch(url, {
       ...options,
+      headers,
       referrerPolicy: "strict-origin-when-cross-origin",
       mode: "cors",
       credentials: "include", // Include credentials (cookies)
@@ -39,7 +49,7 @@ export const fetchWrapper = async (url, options = {}) => {
     if (!response.ok) {
       const error = await response.json();
       if (response.status === 401 || response.status === 403) {
-        toast.error("Your login session expired please login again");
+        toast.error("Your login session expired, please login again");
         return { unauthorized: true };
       }
       return { error };
@@ -51,28 +61,21 @@ export const fetchWrapper = async (url, options = {}) => {
     return { error };
   }
 };
-// function getCookie(name) {
-//   const value = `; ${document.cookie}`;
-//   const parts = value.split(`; ${name}=`);
-//   if (parts.length === 2) return parts.pop().split(";").shift();
-// }
+//cookie method
 
 // export const fetchWrapper = async (url, options = {}) => {
 //   try {
-//     const token = getCookie("jwt"); // Get the token from the cookie
-//     console.log(token, "token");
 //     const response = await fetch(url, {
 //       ...options,
-//       headers: {
-//         ...options.headers,
-//         Authorization: `Bearer ${token}`, // Include token in the Authorization header
-//       },
+//       referrerPolicy: "strict-origin-when-cross-origin",
+//       mode: "cors",
+//       credentials: "include", // Include credentials (cookies)
 //     });
 
 //     if (!response.ok) {
 //       const error = await response.json();
 //       if (response.status === 401 || response.status === 403) {
-//         toast.error("Your login session expired. Please login again.");
+//         toast.error("Your login session expired please login again");
 //         return { unauthorized: true };
 //       }
 //       return { error };
