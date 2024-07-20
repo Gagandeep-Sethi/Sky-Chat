@@ -40,9 +40,10 @@ export const {
 } = socketSlice.actions;
 
 export const initializeSocket = () => async (dispatch) => {
-  const token = localStorage.getItem("token"); // Retrieve your token from local storage
+  const token = localStorage.getItem("token"); // Retrieving  token from local storage
 
   const socket = io(Fetch_Uri, {
+    headers: { "Content-Type": "application/json" },
     auth: {
       token: token, // Send the token as part of the handshake
     },

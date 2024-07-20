@@ -12,12 +12,13 @@ const io = new Server(server, {
     origin: "https://sky-chat-chi.vercel.app",
     methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
     credentials: true,
+    allowedHeaders:
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization",
   },
 });
 const getReceiverSocketId = (receiveId) => {
   // Check if receiveId is present in onlineUsers
   const socketId = onlineUsers[receiveId];
-
   return socketId;
 };
 
