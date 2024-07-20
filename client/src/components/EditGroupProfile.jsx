@@ -47,7 +47,7 @@ const EditGroupProfile = ({ onBack }) => {
   return (
     <div className="transition-all duration-500 relative w-full h-full items-center scrollbar-none overflow-y-auto overflow-x-hidden md:border-l border-gray-400">
       <div
-        className={`flex gap-6 md:justify-center items-center w-full md:py-3 pt-2.5 pb-1.5 sticky shadow-lg ${
+        className={`flex gap-6 justify-center items-center w-full md:py-3 pt-2.5 pb-1.5 sticky shadow-lg ${
           isDarkMode ? "bg-darkBg  " : "bg-lightBg"
         } top-0 z-10`}
       >
