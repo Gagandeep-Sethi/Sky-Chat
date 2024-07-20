@@ -76,7 +76,7 @@ exports.sendMessage = async (req, res) => {
 
         io.to(receiverSocketId).emit("notification", {
           message,
-          isGroup: true,
+          isGroup: false,
         });
       }
     }

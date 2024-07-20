@@ -83,9 +83,11 @@ function App() {
           setToast(notificationData);
         }
       } else {
-        if (notificationData?.message?.senderId?._id !== FriendId) {
+        if (
+          notificationData?.message?.senderId?._id.toString() !==
+          FriendId.toString()
+        )
           setToast(notificationData);
-        }
       }
     });
 
