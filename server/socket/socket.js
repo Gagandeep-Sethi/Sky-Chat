@@ -12,8 +12,7 @@ const io = new Server(server, {
     origin: "https://sky-chat-chi.vercel.app",
     methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
     credentials: true,
-    allowedHeaders:
-      "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+    allowedHeaders: ["my-custom-header"],
   },
 });
 const getReceiverSocketId = (receiveId) => {

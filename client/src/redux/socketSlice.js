@@ -43,10 +43,13 @@ export const initializeSocket = () => async (dispatch) => {
   const token = localStorage.getItem("token"); // Retrieving  token from local storage
 
   const socket = io(Fetch_Uri, {
-    headers: { "Content-Type": "application/json" },
+    extraHeaders: {
+      "my-custom-header": "abcd",
+    },
     auth: {
       token: token, // Send the token as part of the handshake
     },
+
     withCredentials: true, // Set this if you need to include credentials
   });
 
