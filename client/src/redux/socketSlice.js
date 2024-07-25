@@ -47,7 +47,7 @@ export const initializeSocket = () => async (dispatch) => {
       token: token, // Send the token as part of the handshake
     },
 
-    withCredentials: true, // Set this if you need to include credentials
+    // withCredentials: true, // Set this if you need to include credentials
   });
 
   socket.on("connect", () => {

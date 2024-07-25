@@ -4,26 +4,17 @@ const jwt = require("jsonwebtoken");
 const express = require("express");
 const app = express();
 const onlineUsers = {};
-const cors = require("cors");
 
 const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
     origin: "https://sky-chat-chi.vercel.app",
-    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
-    credentials: true,
-    allowedHeaders: ["Content-Type"],
+    // methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+    // credentials: true,
+    // allowedHeaders: ["Content-Type"],
   },
 });
-app.use(
-  cors({
-    origin: "https://sky-chat-chi.vercel.app",
-    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
-    allowedHeaders: ["Content-Type"],
-    credentials: true,
-  })
-);
 
 const getReceiverSocketId = (receiveId) => {
   // Check if receiveId is present in onlineUsers
